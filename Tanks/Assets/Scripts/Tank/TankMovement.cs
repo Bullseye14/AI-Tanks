@@ -52,20 +52,6 @@ public class TankMovement : MonoBehaviour
         m_Rigidbody = GetComponent<Rigidbody>();
         _navMeshAgent = GetComponent<NavMeshAgent>();
 
-        if (_navMeshAgent == null)
-            Debug.LogError("Nav Mesh Agent is not attached to " + gameObject.name);
-        else
-        {
-            if(_patrolPoints != null && _patrolPoints.Count >= 2)
-            {
-                _currentPatrolIndex = 0;
-                SetDestination();
-            }
-            else
-            {
-                Debug.Log("Not enough waypoints");
-            }
-        }
     }
 
 
@@ -91,6 +77,20 @@ public class TankMovement : MonoBehaviour
         if(this.m_PlayerNumber == 1)
         {
             //code for tank1 -- Start()
+            if (_navMeshAgent == null)
+                Debug.LogError("Nav Mesh Agent is not attached to " + gameObject.name);
+            else
+            {
+                if (_patrolPoints != null && _patrolPoints.Count >= 2)
+                {
+                    _currentPatrolIndex = 0;
+                    SetDestination();
+                }
+                else
+                {
+                    Debug.Log("Not enough waypoints");
+                }
+            }
         }
         else if(this.m_PlayerNumber == 2)
         {
@@ -109,33 +109,7 @@ public class TankMovement : MonoBehaviour
 
         EngineAudio();
 
-        if(_travelling && _navMeshAgent.remainingDistance <= 1.0f)
-        {
-            _travelling = false;
-
-            if(_patrolWaiting)
-            {
-                _waiting = true;
-                _waitTimer = 0f;
-            }
-            else
-            {
-                ChangePatrolPoint();
-                SetDestination();
-            }
-        }
-
-        if(_waiting)
-        {
-            _waitTimer += Time.deltaTime;
-            if(_waitTimer >= _totalWaitTime)
-            {
-                _waiting = false;
-
-                ChangePatrolPoint();
-                SetDestination();
-            }
-        }
+        
     }
 
 
@@ -176,6 +150,33 @@ public class TankMovement : MonoBehaviour
         if(this.m_PlayerNumber == 1)
         {
             //code for moving tank1
+            if (_travelling && _navMeshAgent.remainingDistance <= 1.0f)
+            {
+                _travelling = false;
+
+                if (_patrolWaiting)
+                {
+                    _waiting = true;
+                    _waitTimer = 0f;
+                }
+                else
+                {
+                    ChangePatrolPoint();
+                    SetDestination();
+                }
+            }
+
+            if (_waiting)
+            {
+                _waitTimer += Time.deltaTime;
+                if (_waitTimer >= _totalWaitTime)
+                {
+                    _waiting = false;
+
+                    ChangePatrolPoint();
+                    SetDestination();
+                }
+            }
         }
         else if(this.m_PlayerNumber == 2)
         {
