@@ -308,8 +308,8 @@ public class TankMovement : MonoBehaviour
 
     private void ChangePatrolPoint()
     {
-        if (UnityEngine.Random.Range(0f, 1f) <= _switchProbability)
-            _patrolForward = !_patrolForward;
+        //if (UnityEngine.Random.Range(0f, 1f) <= _switchProbability)
+        //    _patrolForward = !_patrolForward;
 
         if (_patrolForward)
             _currentPatrolIndex = (_currentPatrolIndex + 1) % _patrolPointsGame.Count;
