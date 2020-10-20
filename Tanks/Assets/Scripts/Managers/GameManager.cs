@@ -26,8 +26,8 @@ public class GameManager : MonoBehaviour
         m_EndWait = new WaitForSeconds(m_EndDelay);
 
         //SpawnAllTanks();
-        SetUpTanks();
-        SetCameraTargets();
+        //SetUpTanks();
+        //SetCameraTargets();
 
         StartCoroutine(GameLoop());
     }
@@ -54,17 +54,17 @@ public class GameManager : MonoBehaviour
     }
 
 
-    private void SetCameraTargets()
-    {
-        Transform[] targets = new Transform[m_Tanks.Length];
+    //private void SetCameraTargets()
+    //{
+    //    Transform[] targets = new Transform[m_Tanks.Length];
 
-        for (int i = 0; i < targets.Length; i++)
-        {
-            targets[i] = m_Tanks[i].m_Instance.transform;
-        }
+    //    for (int i = 0; i < targets.Length; i++)
+    //    {
+    //        targets[i] = m_Tanks[i].m_Instance.transform;
+    //    }
 
-        m_CameraControl.m_Targets = targets;
-    }
+    //    m_CameraControl.m_Targets = targets;
+    //}
 
 
     private IEnumerator GameLoop()

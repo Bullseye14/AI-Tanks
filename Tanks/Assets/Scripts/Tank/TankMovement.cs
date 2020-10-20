@@ -33,6 +33,7 @@ public class TankMovement : MonoBehaviour
     bool _waiting;
     bool _patrolForward;
     float _waitTimer;
+    Vector3 targetVector;
 
 
     [SerializeField]
@@ -300,7 +301,7 @@ public class TankMovement : MonoBehaviour
     {
         if(_patrolPointsGame != null)
         {
-            Vector3 targetVector = _patrolPointsGame[_currentPatrolIndex].transform.position;
+            targetVector = _patrolPointsGame[_currentPatrolIndex].transform.position;
             _navMeshAgent.SetDestination(targetVector);
             _travelling = true;
         }
