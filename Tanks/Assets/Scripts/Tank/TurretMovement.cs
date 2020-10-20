@@ -5,6 +5,7 @@ using UnityEngine;
 public class TurretMovement : MonoBehaviour
 {
     public GameObject tankFather;
+    public GameObject tankObjective;
 
     private float distanceTankTurretX, distanceTankTurretZ;
     private float turnSpeed = 20f;
@@ -33,7 +34,7 @@ public class TurretMovement : MonoBehaviour
     {
         Move();
 
-        WatchOponent();
+        WatchOponent(tankObjective);
     }
 
     private void Move()
@@ -47,28 +48,17 @@ public class TurretMovement : MonoBehaviour
         transform.position = movement;
     }
 
-    private void WatchOponent()
+    private void WatchOponent(GameObject tankObjective)
     {
-        Vector3 mousePos = Input.mousePosition;
+        Vector3 desiredPosition = tankObjective.transform.position;
 
-        float angleDesired = CalculateAngle(mousePos);
+        Vector3 angleToLook;
+        angleToLook.x = angleToLook.z = 0;
+        angleToLook.y = CalculateAngle(desiredPosition);
 
-        // Quaternion turnRotation;
+        Quaternion desiredRotation = Quaternion.Euler(angleToLook);
 
-        if (transform.rotation.y > angleDesired + 2)
-        {
-            float turn = -turnSpeed * Time.deltaTime;
-            // turnRotation = Quaternion.LookRotation(mousePos);
-            // m_RigidBody.MoveRotation(m_RigidBody.rotation * turnRotation);
-        }
-
-        if (transform.rotation.y < angleDesired - 2)
-        {
-            float turn = turnSpeed * Time.deltaTime;
-            // turnRotation = Quaternion.LookRotation(mousePos);
-            // m_RigidBody.MoveRotation(m_RigidBody.rotation * turnRotation);
-        }
-
+        m_RigidBody.MoveRotation(desiredRotation);
     }
 
     private float CalculateAngle(Vector3 objectivePos)

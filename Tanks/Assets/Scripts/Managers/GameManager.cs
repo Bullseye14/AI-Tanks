@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
         //SetUpTanks();
         //SetCameraTargets();
 
-        StartCoroutine(GameLoop());
+        //StartCoroutine(GameLoop());
     }
 
 
@@ -67,21 +67,21 @@ public class GameManager : MonoBehaviour
     //}
 
 
-    private IEnumerator GameLoop()
-    {
-        yield return StartCoroutine(RoundStarting());
-        yield return StartCoroutine(RoundPlaying());
-        yield return StartCoroutine(RoundEnding());
+    //private IEnumerator GameLoop()
+    //{
+    //    yield return StartCoroutine(RoundStarting());
+    //   // yield return StartCoroutine(RoundPlaying());
+    //    yield return StartCoroutine(RoundEnding());
 
-        if (m_GameWinner != null)
-        {
-            SceneManager.LoadScene(0);
-        }
-        else
-        {
-            StartCoroutine(GameLoop());
-        }
-    }
+    //    if (m_GameWinner != null)
+    //    {
+    //        SceneManager.LoadScene(0);
+    //    }
+    //    else
+    //    {
+    //        StartCoroutine(GameLoop());
+    //    }
+    //}
 
 
     private IEnumerator RoundStarting()
@@ -89,7 +89,7 @@ public class GameManager : MonoBehaviour
         ResetAllTanks();
         DisableTankControl();
 
-        m_CameraControl.SetStartPositionAndSize();
+        //m_CameraControl.SetStartPositionAndSize();
 
         m_RoundNumber++;
         m_MessageText.text = "ROUND " + m_RoundNumber;
@@ -98,63 +98,63 @@ public class GameManager : MonoBehaviour
     }
 
 
-    private IEnumerator RoundPlaying()
-    {
-        EnableTankControl();
+    //private IEnumerator RoundPlaying()
+    //{
+    //    EnableTankControl();
 
-        m_MessageText.text = "";
+    //    m_MessageText.text = "";
 
-        while(!OneTankLeft())
-        {
-            yield return null;
-        }
-    }
-
-
-    private IEnumerator RoundEnding()
-    {
-        DisableTankControl();
-
-        m_RoundWinner = null;
-
-        m_RoundWinner = GetRoundWinner();
-
-        if (m_RoundWinner != null)
-            m_RoundWinner.m_Wins++;
-
-        m_GameWinner = GetGameWinner();
-
-        string message = EndMessage();
-        m_MessageText.text = message;
-
-        yield return m_EndWait;
-    }
+    //    //while(!OneTankLeft())
+    //    //{
+    //    //    yield return null;
+    //    //}
+    //}
 
 
-    private bool OneTankLeft()
-    {
-        int numTanksLeft = 0;
+    //private IEnumerator RoundEnding()
+    //{
+    //    DisableTankControl();
 
-        for (int i = 0; i < m_Tanks.Length; i++)
-        {
-            if (m_Tanks[i].m_Instance.activeSelf)
-                numTanksLeft++;
-        }
+    //    m_RoundWinner = null;
 
-        return numTanksLeft <= 1;
-    }
+    //    m_RoundWinner = GetRoundWinner();
+
+    //    if (m_RoundWinner != null)
+    //        m_RoundWinner.m_Wins++;
+
+    //    m_GameWinner = GetGameWinner();
+
+    //    string message = EndMessage();
+    //    m_MessageText.text = message;
+
+    //    yield return m_EndWait;
+    //}
 
 
-    private TankManager GetRoundWinner()
-    {
-        for (int i = 0; i < m_Tanks.Length; i++)
-        {
-            if (m_Tanks[i].m_Instance.activeSelf)
-                return m_Tanks[i];
-        }
+    //private bool OneTankLeft()
+    //{
+    //    int numTanksLeft = 0;
 
-        return null;
-    }
+    //    for (int i = 0; i < m_Tanks.Length; i++)
+    //    {
+    //        if (m_Tanks[i].m_Instance.activeSelf)
+    //            numTanksLeft++;
+    //    }
+
+    //    return numTanksLeft <= 1;
+    //}
+
+
+    //private TankManager GetRoundWinner()
+    //{
+    //    for (int i = 0; i < m_Tanks.Length; i++)
+    //    {
+    //        if (m_Tanks[i].m_Instance.activeSelf)
+    //            return m_Tanks[i];
+    //    }
+
+    //    return null;
+    //}
 
 
     private TankManager GetGameWinner()
@@ -193,7 +193,7 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < m_Tanks.Length; i++)
         {
-            m_Tanks[i].Reset();
+            // m_Tanks[i].Reset();
         }
     }
 
@@ -202,7 +202,7 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < m_Tanks.Length; i++)
         {
-            m_Tanks[i].EnableControl();
+            //m_Tanks[i].EnableControl();
         }
     }
 
@@ -211,7 +211,7 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < m_Tanks.Length; i++)
         {
-            m_Tanks[i].DisableControl();
+            //m_Tanks[i].DisableControl();
         }
     }
 }

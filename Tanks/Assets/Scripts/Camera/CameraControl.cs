@@ -93,12 +93,12 @@ public class CameraControl : MonoBehaviour
     }
 
 
-    public void SetStartPositionAndSize()
-    {
-        FindAveragePosition();
+    //public void SetStartPositionAndSize()
+    //{
+    //    FindAveragePosition();
 
-        transform.position = m_DesiredPosition;
+    //    transform.position = m_DesiredPosition;
 
-        m_Camera.orthographicSize = FindRequiredSize();
-    }
+    //    m_Camera.orthographicSize = FindRequiredSize();
+    //}
 }
