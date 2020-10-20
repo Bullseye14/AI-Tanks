@@ -3,6 +3,7 @@ using System.Collections.Specialized;
 using System.Security.Cryptography;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
 public class TankMovement : MonoBehaviour
@@ -21,12 +22,16 @@ public class TankMovement : MonoBehaviour
     private Rigidbody m_Rigidbody;         
     private float m_MovementInputValue;    
     private float m_TurnInputValue;        
-    private float m_OriginalPitch;         
+    private float m_OriginalPitch;
+
+    // Patrolling Movement Variables
+    private NavMeshAgent patrolAgent;
 
 
     private void Awake()
     {
         m_Rigidbody = GetComponent<Rigidbody>();
+        patrolAgent = GetComponent<NavMeshAgent>();
     }
 
 
@@ -46,8 +51,17 @@ public class TankMovement : MonoBehaviour
 
     private void Start()
     {
-        m_MovementAxisName = "Vertical" + m_PlayerNumber;
-        m_TurnAxisName = "Horizontal" + m_PlayerNumber;
+        //m_MovementAxisName = "Vertical" + m_PlayerNumber;
+        //m_TurnAxisName = "Horizontal" + m_PlayerNumber;
+
+        if(this.m_PlayerNumber == 1)
+        {
+            //code for tank1 -- Start()
+        }
+        else if(this.m_PlayerNumber == 2)
+        {
+            // code for tank2 -- Start()
+        }
 
         m_OriginalPitch = m_MovementAudio.pitch;
     }
@@ -56,8 +70,8 @@ public class TankMovement : MonoBehaviour
     private void Update()
     {
         // Store the player's input and make sure the audio for the engine is playing.
-        m_MovementInputValue = Input.GetAxis(m_MovementAxisName);
-        m_TurnInputValue = Input.GetAxis(m_TurnAxisName);
+        //m_MovementInputValue = Input.GetAxis(m_MovementAxisName);
+        //m_TurnInputValue = Input.GetAxis(m_TurnAxisName);
 
         EngineAudio();
     }
@@ -91,27 +105,37 @@ public class TankMovement : MonoBehaviour
     {
         // Move and turn the tank.
         Move();
-        Turn();
+        //Turn();
     }
 
 
     private void Move()
     {
+        if(this.m_PlayerNumber == 1)
+        {
+            //code for moving tank1
+        }
+        else if(this.m_PlayerNumber == 2)
+        {
+            //code for moving tank2
+        }
+
+
         // Adjust the position of the tank based on the player's input.
-        Vector3 movement = transform.forward * m_MovementInputValue * m_Speed * Time.deltaTime;
+        //Vector3 movement = transform.forward * m_MovementInputValue * m_Speed * Time.deltaTime;
 
-        m_Rigidbody.MovePosition(m_Rigidbody.position + movement);
+        //m_Rigidbody.MovePosition(m_Rigidbody.position + movement);
     }
 
 
-    private void Turn()
-    {
-        // Adjust the rotation of the tank based on the player's input.
+    //private void Turn()
+    //{
+    //    // Adjust the rotation of the tank based on the player's input.
 
-        float turn = m_TurnInputValue * m_TurnSpeed * Time.deltaTime;
+    //    float turn = m_TurnInputValue * m_TurnSpeed * Time.deltaTime;
 
-        Quaternion turnRotation = Quaternion.Euler(0f, turn, 0f);
+    //    Quaternion turnRotation = Quaternion.Euler(0f, turn, 0f);
 
-        m_Rigidbody.MoveRotation(m_Rigidbody.rotation * turnRotation);
-    }
+    //    m_Rigidbody.MoveRotation(m_Rigidbody.rotation * turnRotation);
+    //}
 }
