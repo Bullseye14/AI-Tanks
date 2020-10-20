@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Security.Cryptography;
 using System.Threading;
@@ -25,13 +26,46 @@ public class TankMovement : MonoBehaviour
     private float m_OriginalPitch;
 
     // Patrolling Movement Variables
-    private NavMeshAgent patrolAgent;
+    private NavMeshAgent _navMeshAgent;
+    int _currentPatrolIndex;
+    bool _travelling;
+    bool _waiting;
+    bool _patrolForward;
+    float _waitTimer;
+
+
+    [SerializeField]
+    bool _patrolWaiting; // if agents is waiting or not in a waypoint
+
+    [SerializeField]
+    float _totalWaitTime = 3f; // time that agent waits in eaach waypoint
+
+    [SerializeField]
+    float _switchProbability = 0.2f; // probability to change direction
+
+    [SerializeField]
+    List<WayPoints> _patrolPoints; // List of all waypoints
 
 
     private void Awake()
     {
         m_Rigidbody = GetComponent<Rigidbody>();
-        patrolAgent = GetComponent<NavMeshAgent>();
+        _navMeshAgent = GetComponent<NavMeshAgent>();
+
+        if (_navMeshAgent == null)
+            Debug.LogError("Nav Mesh Agent is not attached to " + gameObject.name);
+        else
+        {
+            if(_patrolPoints != null && _patrolPoints.Count >= 2)
+            {
+                _currentPatrolIndex = 0;
+                SetDestination();
+            }
+            else
+            {
+                Debug.Log("Not enough waypoints");
+            }
+        }
     }
 
 
@@ -74,6 +108,34 @@ public class TankMovement : MonoBehaviour
         //m_TurnInputValue = Input.GetAxis(m_TurnAxisName);
 
         EngineAudio();
+
+        if(_travelling && _navMeshAgent.remainingDistance <= 1.0f)
+        {
+            _travelling = false;
+
+            if(_patrolWaiting)
+            {
+                _waiting = true;
+                _waitTimer = 0f;
+            }
+            else
+            {
+                ChangePatrolPoint();
+                SetDestination();
+            }
+        }
+
+        if(_waiting)
+        {
+            _waitTimer += Time.deltaTime;
+            if(_waitTimer >= _totalWaitTime)
+            {
+                _waiting = false;
+
+                ChangePatrolPoint();
+                SetDestination();
+            }
+        }
     }
 
 
@@ -138,4 +200,28 @@ public class TankMovement : MonoBehaviour
 
     //    m_Rigidbody.MoveRotation(m_Rigidbody.rotation * turnRotation);
     //}
+
+    private void SetDestination()
+    {
+        if(_patrolPoints != null)
+        {
+            Vector3 targetVector = _patrolPoints[_currentPatrolIndex].transform.position;
+            _navMeshAgent.SetDestination(targetVector);
+            _travelling = true;
+        }
+    }
+
+    private void ChangePatrolPoint()
+    {
+        if (UnityEngine.Random.Range(0f, 1f) <= _switchProbability)
+            _patrolForward = !_patrolForward;
+
+        if (_patrolForward)
+            _currentPatrolIndex = (_currentPatrolIndex + 1) % _patrolPoints.Count;
+        else
+        {
+            if (--_currentPatrolIndex < 0)
+                _currentPatrolIndex = _patrolPoints.Count - 1;
+        }
+    }
 }
