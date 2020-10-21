@@ -5,13 +5,12 @@ using UnityEngine.AI;
 
 public class PatrollingMovement : MonoBehaviour
 {
-
     // Patrolling Movement Variables
     private NavMeshAgent _navMeshAgent;
     int _currentPatrolIndex;
     bool _travelling;
     bool _waiting;
-    bool _patrolForward;
+    bool _patrolForward = false;
     float _waitTimer;
     Vector3 targetVector;
 
