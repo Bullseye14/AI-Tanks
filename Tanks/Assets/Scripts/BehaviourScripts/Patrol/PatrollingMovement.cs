@@ -7,25 +7,18 @@ public class PatrollingMovement : MonoBehaviour
 {
     // Patrolling Movement Variables
     private NavMeshAgent _navMeshAgent;
-    int _currentPatrolIndex;
-    bool _travelling;
-    bool _waiting;
-    bool _patrolForward = false;
-    float _waitTimer;
-    Vector3 targetVector;
+    private int _currentPatrolIndex;
+    private bool _travelling;
+    private bool _waiting;
+    private bool _patrolForward = false;
+    private float _waitTimer;
+    private Vector3 targetVector;
 
-
-    [SerializeField]
-    bool _patrolWaiting; // if agents is waiting or not in a waypoint
-
-    [SerializeField]
-    float _totalWaitTime = 3f; // time that agent waits in eaach waypoint
-
-    [SerializeField]
-    float _switchProbability = 0.2f; // probability to change direction
-
-    [SerializeField]
-    List<WayPoints> _patrolPointsGame; // List of all waypoints in the game
+    // Public
+    public bool _patrolWaiting; // if agents is waiting or not in a waypoint
+    public float _totalWaitTime; // time that agent waits in eaach waypoint
+    //public float _switchProbability = 0.2f; // probability to change direction
+    public List<WayPoints> _patrolPointsGame; // List of all waypoints in the game
 
     private void Awake()
     {
