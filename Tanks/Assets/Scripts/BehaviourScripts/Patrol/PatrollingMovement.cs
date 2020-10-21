@@ -50,7 +50,6 @@ public class PatrollingMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //code for moving tank1 in menu
         if (_travelling && _navMeshAgent.remainingDistance <= 0.5f)
         {
             _travelling = false;
@@ -92,8 +91,8 @@ public class PatrollingMovement : MonoBehaviour
 
     private void ChangePatrolPoint()
     {
-        //if (UnityEngine.Random.Range(0f, 1f) <= _switchProbability)
-        //    _patrolForward = !_patrolForward;
+        /*if (UnityEngine.Random.Range(0f, 1f) <= _switchProbability)   // Probability to change patrolPoint
+            _patrolForward = !_patrolForward;*/
 
         if (_patrolForward)
             _currentPatrolIndex = (_currentPatrolIndex + 1) % _patrolPointsGame.Count;
