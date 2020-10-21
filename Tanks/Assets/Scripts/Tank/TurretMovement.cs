@@ -7,8 +7,8 @@ public class TurretMovement : MonoBehaviour
     public GameObject tankFather;
     public GameObject tankObjective;
 
-    private float distanceTankTurretX, distanceTankTurretZ;
-    private float turnSpeed = 20f;
+    private float distanceTankTurretX, distanceTankTurretY, distanceTankTurretZ;
+    private float turnSpeed = 1f;
 
     private Rigidbody m_RigidBody;
 
@@ -21,6 +21,7 @@ public class TurretMovement : MonoBehaviour
     void Start()
     {
         distanceTankTurretX = tankFather.transform.position.x - transform.position.x;
+        distanceTankTurretY = 1.08f;
         distanceTankTurretZ = tankFather.transform.position.z - transform.position.z;
     }
 
@@ -32,33 +33,28 @@ public class TurretMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Move();
+        Move(tankObjective);
 
-        WatchOponent(tankObjective);
+        // WatchOponent(tankObjective);
     }
 
-    private void Move()
+    private void Move(GameObject tankObjective)
     {
         Vector3 movement;
 
         movement.x = tankFather.transform.position.x + distanceTankTurretX;
+        movement.y = tankFather.transform.position.y + distanceTankTurretY;
         movement.z = tankFather.transform.position.z + distanceTankTurretZ;
-        movement.y = 1.08f;
 
         transform.position = movement;
-    }
 
-    private void WatchOponent(GameObject tankObjective)
-    {
-        Vector3 desiredPosition = tankObjective.transform.position;
+        Vector3 rotation;
 
-        Vector3 angleToLook;
-        angleToLook.x = angleToLook.z = 0;
-        angleToLook.y = CalculateAngle(desiredPosition);
+        rotation.x = 0;
+        rotation.y = CalculateAngle(tankObjective.transform.position);
+        rotation.z = 0;
 
-        Quaternion desiredRotation = Quaternion.Euler(angleToLook);
-
-        m_RigidBody.MoveRotation(desiredRotation);
+        transform.rotation = Quaternion.Euler(rotation);
     }
 
     private float CalculateAngle(Vector3 objectivePos)
