@@ -8,14 +8,6 @@ public class TurretMovement : MonoBehaviour
     public GameObject tankObjective;
 
     private float distanceTankTurretX, distanceTankTurretY, distanceTankTurretZ;
-    private float turnSpeed = 1f;
-
-    private Rigidbody m_RigidBody;
-
-    private void Awake()
-    {
-        m_RigidBody = GetComponent<Rigidbody>();
-    }
 
     // Start is called before the first frame update
     void Start()
@@ -23,12 +15,6 @@ public class TurretMovement : MonoBehaviour
         distanceTankTurretX = tankFather.transform.position.x - transform.position.x;
         distanceTankTurretY = 1.08f;
         distanceTankTurretZ = tankFather.transform.position.z - transform.position.z;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     private void FixedUpdate()
