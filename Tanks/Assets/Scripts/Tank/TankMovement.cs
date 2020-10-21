@@ -26,36 +26,9 @@ public class TankMovement : MonoBehaviour
     private float m_TurnInputValue;        
     private float m_OriginalPitch;
 
-    // Patrolling Movement Variables
-    private NavMeshAgent _navMeshAgent;
-    int _currentPatrolIndex;
-    bool _travelling;
-    bool _waiting;
-    bool _patrolForward;
-    float _waitTimer;
-    Vector3 targetVector;
-
-
-    [SerializeField]
-    bool _patrolWaiting; // if agents is waiting or not in a waypoint
-
-    [SerializeField]
-    float _totalWaitTime = 3f; // time that agent waits in eaach waypoint
-
-    [SerializeField]
-    float _switchProbability = 0.2f; // probability to change direction
-
-    [SerializeField]
-    List<WayPoints> _patrolPointsGame; // List of all waypoints in the game
-
-    [SerializeField]
-    List<WayPoints> _patrolPointsMenu; // List of all waypoints in the menu
-
-
     private void Awake()
     {
         m_Rigidbody = GetComponent<Rigidbody>();
-        _navMeshAgent = GetComponent<NavMeshAgent>();
 
     }
 
@@ -81,44 +54,11 @@ public class TankMovement : MonoBehaviour
 
         if(this.m_PlayerNumber == 1)
         {
-            //code for tank1 -- Start()
-            if (_navMeshAgent == null)
-                Debug.LogError("Nav Mesh Agent is not attached to " + gameObject.name);
-            else
-            {
-                if (_patrolPointsGame != null && _patrolPointsGame.Count >= 2)
-                {
-                    _currentPatrolIndex = 0;
-                    SetDestination();
-                }
-                else
-                {
-                    Debug.Log("Not enough waypoints");
-                }
-            }
+
         }
         else if(this.m_PlayerNumber == 2)
         {
-            // code for tank2 -- Start()
-
-            // Only in the Menu Scene
-            if (SceneManager.GetActiveScene().name == "Menu")
-            {
-                if (_navMeshAgent == null)
-                    Debug.LogError("Nav Mesh Agent is not attached to " + gameObject.name);
-                else
-                {
-                    if (_patrolPointsGame != null && _patrolPointsGame.Count >= 2)
-                    {
-                        _currentPatrolIndex = 0;
-                        SetDestination();
-                    }
-                    else
-                    {
-                        Debug.Log("Not enough waypoints");
-                    }
-                }
-            }
+            
         }
 
         m_OriginalPitch = m_MovementAudio.pitch;
@@ -171,112 +111,18 @@ public class TankMovement : MonoBehaviour
 
     private void Move()
     {
-        // Menu Scene
-        if(SceneManager.GetActiveScene().name == "Menu")
+        // Player 1
+        if (this.m_PlayerNumber == 1)
         {
-            // Player 1
-            if (this.m_PlayerNumber == 1)
-            {
-                //code for moving tank1 in menu
-                if (_travelling && _navMeshAgent.remainingDistance <= 0.5f)
-                {
-                    _travelling = false;
-
-                    if (_patrolWaiting)
-                    {
-                        _waiting = true;
-                        _waitTimer = 0f;
-                    }
-                    else
-                    {
-                        ChangePatrolPoint();
-                        SetDestination();
-                    }
-                }
-
-                if (_waiting)
-                {
-                    _waitTimer += Time.deltaTime;
-                    if (_waitTimer >= _totalWaitTime)
-                    {
-                        _waiting = false;
-
-                        ChangePatrolPoint();
-                        SetDestination();
-                    }
-                }
-            }
-
-            // Player 2
-            if (this.m_PlayerNumber == 2)
-            {
-                //code for moving tank2 in menu
-                if (_travelling && _navMeshAgent.remainingDistance <= 0.5f)
-                {
-                    _travelling = false;
-
-                    if (_patrolWaiting)
-                    {
-                        _waiting = true;
-                        _waitTimer = 0f;
-                    }
-                    else
-                    {
-                        ChangePatrolPoint();
-                        SetDestination();
-                    }
-                }
-
-                if (_waiting)
-                {
-                    _waitTimer += Time.deltaTime;
-                    if (_waitTimer >= _totalWaitTime)
-                    {
-                        _waiting = false;
-
-                        ChangePatrolPoint();
-                        SetDestination();
-                    }
-                }
-            }
+            //code for moving tank1 in menu
+            
         }
-        else
+
+        // Player 2
+        else if (this.m_PlayerNumber == 2)
         {
-            if (this.m_PlayerNumber == 1)
-            {
-                //code for moving tank1
-                if (_travelling && _navMeshAgent.remainingDistance <= 0.5f)
-                {
-                    _travelling = false;
-
-                    if (_patrolWaiting)
-                    {
-                        _waiting = true;
-                        _waitTimer = 0f;
-                    }
-                    else
-                    {
-                        ChangePatrolPoint();
-                        SetDestination();
-                    }
-                }
-
-                if (_waiting)
-                {
-                    _waitTimer += Time.deltaTime;
-                    if (_waitTimer >= _totalWaitTime)
-                    {
-                        _waiting = false;
-
-                        ChangePatrolPoint();
-                        SetDestination();
-                    }
-                }
-            }
-            else if (this.m_PlayerNumber == 2)
-            {
-                //code for moving tank2
-            }
+            //code for moving tank2 in menu
+            
         }
 
         // Adjust the position of the tank based on the player's input.
@@ -286,38 +132,15 @@ public class TankMovement : MonoBehaviour
     }
 
 
-    //private void Turn()
-    //{
-    //    // Adjust the rotation of the tank based on the player's input.
-
-    //    float turn = m_TurnInputValue * m_TurnSpeed * Time.deltaTime;
-
-    //    Quaternion turnRotation = Quaternion.Euler(0f, turn, 0f);
-
-    //    m_Rigidbody.MoveRotation(m_Rigidbody.rotation * turnRotation);
-    //}
-
-    private void SetDestination()
+    private void Turn()
     {
-        if(_patrolPointsGame != null)
-        {
-            targetVector = _patrolPointsGame[_currentPatrolIndex].transform.position;
-            _navMeshAgent.SetDestination(targetVector);
-            _travelling = true;
-        }
+        // Adjust the rotation of the tank based on the player's input.
+
+        float turn = m_TurnInputValue * m_TurnSpeed * Time.deltaTime;
+
+        Quaternion turnRotation = Quaternion.Euler(0f, turn, 0f);
+
+        m_Rigidbody.MoveRotation(m_Rigidbody.rotation * turnRotation);
     }
 
-    private void ChangePatrolPoint()
-    {
-        //if (UnityEngine.Random.Range(0f, 1f) <= _switchProbability)
-        //    _patrolForward = !_patrolForward;
-
-        if (_patrolForward)
-            _currentPatrolIndex = (_currentPatrolIndex + 1) % _patrolPointsGame.Count;
-        else
-        {
-            if (--_currentPatrolIndex < 0)
-                _currentPatrolIndex = _patrolPointsGame.Count - 1;
-        }
-    }
 }
