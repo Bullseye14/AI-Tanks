@@ -22,6 +22,9 @@ public class TankShooting : MonoBehaviour
     private float m_CurrentLaunchForce;  
     private float m_ChargeSpeed;         
     private bool m_Fired;
+    private bool canFire = true;
+    public float delayTime = 2.5f;
+    private float delayTimer;
 
     private void OnEnable()
     {
@@ -39,9 +42,20 @@ public class TankShooting : MonoBehaviour
 
     private void Update()
     {
-        //Vector3 enemyPos = enemy.transform.position;
+        if(!canFire)
+        {
+            delayTimer += Time.deltaTime;
+            if (delayTimer > delayTime)
+                canFire = true;
+        }
 
-        //Vector3 distance = enemyPos - transform.position;
+        Vector3 distance = enemy.transform.position - transform.position;
+
+        distance = AbsoluteValue(distance);
+
+        if (distance.x < 25f && distance.z < 25f && canFire)
+            Fire();
+
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -85,6 +99,8 @@ public class TankShooting : MonoBehaviour
 
     private void Fire()
     {
+        canFire = false;
+
         // Instantiate and launch the shell.
         m_Fired = true;
 
@@ -115,5 +131,16 @@ public class TankShooting : MonoBehaviour
     private void FireNew(Vector3 enemyPos)
     {
 
+    }
+
+    private Vector3 AbsoluteValue(Vector3 vector)
+    {
+        if (vector.x < 0) vector.x = -vector.x;
+
+        if (vector.y < 0) vector.y = -vector.y;
+
+        if (vector.z < 0) vector.z = -vector.z;
+
+        return vector;
     }
 }

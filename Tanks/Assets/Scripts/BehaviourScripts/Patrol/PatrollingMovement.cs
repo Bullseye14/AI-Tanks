@@ -16,7 +16,7 @@ public class PatrollingMovement : MonoBehaviour
 
     // Public
     public bool patrolWaiting; // if agents is waiting or not in a waypoint
-    public float totalWaitTime; // time that agent waits in eaach waypoint
+    public float totalWaitTime; // time that agent waits in each waypoint
     //public float changeWaypointProbability = 0.2f; // probability to change direction
     public List<WayPoints> waypoints; // List of all waypoints in the game
 
