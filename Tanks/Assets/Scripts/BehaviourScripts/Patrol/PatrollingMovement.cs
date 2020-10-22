@@ -6,50 +6,46 @@ using UnityEngine.AI;
 public class PatrollingMovement : MonoBehaviour
 {
     // Patrolling Movement Variables
-    private NavMeshAgent _navMeshAgent;
-    private int _currentPatrolIndex;
-    private bool _travelling;
-    private bool _waiting;
-    private bool _patrolForward = false;
-    private float _waitTimer;
-    private Vector3 targetVector;
+    private NavMeshAgent agent;
+    private int currentWaypoint;
+    private bool isTravelling;
+    private bool isWaiting;
+    private bool nextWaypoint = false;
+    private float waitTimer;
+    private Vector3 target;
 
     // Public
-    public bool _patrolWaiting; // if agents is waiting or not in a waypoint
-    public float _totalWaitTime; // time that agent waits in eaach waypoint
-    //public float _switchProbability = 0.2f; // probability to change direction
-    public List<WayPoints> _patrolPointsGame; // List of all waypoints in the game
+    public bool patrolWaiting; // if agents is waiting or not in a waypoint
+    public float totalWaitTime; // time that agent waits in eaach waypoint
+    //public float changeWaypointProbability = 0.2f; // probability to change direction
+    public List<WayPoints> waypoints; // List of all waypoints in the game
 
     private void Awake()
     {
-        _navMeshAgent = GetComponent<NavMeshAgent>();
+        agent = GetComponent<NavMeshAgent>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        if (_patrolPointsGame != null && _patrolPointsGame.Count >= 2)
+        if (waypoints != null && waypoints.Count >= 2)
         {
-            _currentPatrolIndex = 0;
+            currentWaypoint = 0;
             SetDestination();
-        }
-        else
-        {
-            Debug.Log("Not enough waypoints");
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (_travelling && _navMeshAgent.remainingDistance <= 0.5f)
+        if (isTravelling && agent.remainingDistance <= 0.5f)
         {
-            _travelling = false;
+            isTravelling = false;
 
-            if (_patrolWaiting)
+            if (patrolWaiting)
             {
-                _waiting = true;
-                _waitTimer = 0f;
+                isWaiting = true;
+                waitTimer = 0f;
             }
             else
             {
@@ -58,12 +54,12 @@ public class PatrollingMovement : MonoBehaviour
             }
         }
 
-        if (_waiting)
+        if (isWaiting)
         {
-            _waitTimer += Time.deltaTime;
-            if (_waitTimer >= _totalWaitTime)
+            waitTimer += Time.deltaTime;
+            if (waitTimer >= totalWaitTime)
             {
-                _waiting = false;
+                isWaiting = false;
 
                 ChangePatrolPoint();
                 SetDestination();
@@ -73,25 +69,25 @@ public class PatrollingMovement : MonoBehaviour
 
     private void SetDestination()
     {
-        if (_patrolPointsGame != null)
+        if (waypoints != null)
         {
-            targetVector = _patrolPointsGame[_currentPatrolIndex].transform.position;
-            _navMeshAgent.SetDestination(targetVector);
-            _travelling = true;
+            target = waypoints[currentWaypoint].transform.position;
+            agent.SetDestination(target);
+            isTravelling = true;
         }
     }
 
     private void ChangePatrolPoint()
     {
-        /*if (UnityEngine.Random.Range(0f, 1f) <= _switchProbability)   // Probability to change patrolPoint
-            _patrolForward = !_patrolForward;*/
+        /*if (UnityEngine.Random.Range(0f, 1f) <= changeWaypointProbability) ---> Probability to change patrolPoint
+            nextWaypoint = !nextWaypoint;*/
 
-        if (_patrolForward)
-            _currentPatrolIndex = (_currentPatrolIndex + 1) % _patrolPointsGame.Count;
+        if (nextWaypoint)
+            currentWaypoint = (currentWaypoint + 1) % waypoints.Count;
         else
         {
-            if (--_currentPatrolIndex < 0)
-                _currentPatrolIndex = _patrolPointsGame.Count - 1;
+            if (--currentWaypoint < 0)
+                currentWaypoint = waypoints.Count - 1;
         }
     }
 }

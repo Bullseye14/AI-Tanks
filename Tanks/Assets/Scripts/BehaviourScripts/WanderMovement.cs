@@ -10,11 +10,11 @@ public class WanderMovement : MonoBehaviour
     private float nextCheck;
     private NavMeshHit navHit;
     private Vector3 wanderTarget;
+    private float checkRate = 0.3f;
 
     // Public
     public Transform TankWander;
-    public Transform TankTarget;
-    public float checkRate;
+    //public Transform TankTarget;
     public float wanderRange = 10f;
 
     private void Awake()
@@ -24,7 +24,7 @@ public class WanderMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        checkRate = Random.Range(0.3f, 0.4f);
+        //checkRate = Random.Range(0.3f, 0.4f);
         TankWander = transform;
     }
 
@@ -35,7 +35,6 @@ public class WanderMovement : MonoBehaviour
         {
             nextCheck = Time.time + checkRate;
             CheckIfIShouldWander();
-
         }
     }
 
