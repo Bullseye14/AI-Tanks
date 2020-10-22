@@ -20,8 +20,6 @@ public class TurretMovement : MonoBehaviour
     private void FixedUpdate()
     {
         Move(tankObjective);
-
-        // WatchOponent(tankObjective);
     }
 
     private void Move(GameObject tankObjective)
