@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class WanderMovement : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class WanderMovement : MonoBehaviour
 
     // Public
     public Transform TankWander;
-    //public Transform TankTarget;
+    public Transform TankTarget;
     public float wanderRange = 10f;
 
     private void Awake()
@@ -42,7 +43,11 @@ public class WanderMovement : MonoBehaviour
     {
         if(RandomWanderTarget(TankWander.position, wanderRange, out wanderTarget))
         {
-            agent.SetDestination(wanderTarget);
+            if(SceneManager.GetActiveScene().name == "Menu")
+                agent.SetDestination(TankTarget.transform.position);
+
+            else if(SceneManager.GetActiveScene().name == "Main")
+                agent.SetDestination(wanderTarget);
         }
     }
 
