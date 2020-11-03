@@ -4,50 +4,56 @@ using UnityEngine;
 
 public class TurretMovement : MonoBehaviour
 {
-    public GameObject tankFather;
-    public GameObject tankObjective;
+    //public GameObject tankFather;
+    //public GameObject tankObjective;
 
-    private float distanceTankTurretX, distanceTankTurretY, distanceTankTurretZ;
+    //private float distanceTankTurretX, distanceTankTurretY, distanceTankTurretZ;
+
+    public Transform target;
+    public Transform turret;
 
     // Start is called before the first frame update
-    void Start()
-    {
-        distanceTankTurretX = tankFather.transform.position.x - transform.position.x;
-        distanceTankTurretY = 1.08f;
-        distanceTankTurretZ = tankFather.transform.position.z - transform.position.z;
-    }
+    //void Start()
+    //{
+    //    distanceTankTurretX = tankFather.transform.position.x - transform.position.x;
+    //    distanceTankTurretY = 1.08f;
+    //    distanceTankTurretZ = tankFather.transform.position.z - transform.position.z;
+    //}
 
     private void FixedUpdate()
     {
-        Move(tankObjective);
+        //Move(tankObjective);
+        Vector3 targetPos = new Vector3(target.position.x, turret.transform.position.y, target.position.z);
+
+        turret.transform.LookAt(targetPos);
     }
 
-    private void Move(GameObject tankObjective)
-    {
-        Vector3 movement;
+    //private void Move(GameObject tankObjective)
+    //{
+    //    Vector3 movement;
 
-        movement.x = tankFather.transform.position.x + distanceTankTurretX;
-        movement.y = tankFather.transform.position.y + distanceTankTurretY;
-        movement.z = tankFather.transform.position.z + distanceTankTurretZ;
+    //    movement.x = tankFather.transform.position.x + distanceTankTurretX;
+    //    movement.y = tankFather.transform.position.y + distanceTankTurretY;
+    //    movement.z = tankFather.transform.position.z + distanceTankTurretZ;
 
-        transform.position = movement;
+    //    transform.position = movement;
 
-        Vector3 rotation;
+    //    Vector3 rotation;
 
-        rotation.x = 0;
-        rotation.y = CalculateAngle(tankObjective.transform.position);
-        rotation.z = 0;
+    //    rotation.x = 0;
+    //    rotation.y = CalculateAngle(tankObjective.transform.position);
+    //    rotation.z = 0;
 
-        transform.rotation = Quaternion.Euler(rotation);
-    }
+    //    transform.rotation = Quaternion.Euler(rotation);
+    //}
 
-    private float CalculateAngle(Vector3 objectivePos)
-    {
-        float distanceX = objectivePos.x - transform.position.x;
-        float distanceZ = objectivePos.z - transform.position.z;
+    //private float CalculateAngle(Vector3 objectivePos)
+    //{
+    //    float distanceX = objectivePos.x - transform.position.x;
+    //    float distanceZ = objectivePos.z - transform.position.z;
 
-        float angleDesired = Mathf.Atan2(distanceX, distanceZ) * Mathf.Rad2Deg;
+    //    float angleDesired = Mathf.Atan2(distanceX, distanceZ) * Mathf.Rad2Deg;
 
-        return angleDesired;
-    }
+    //    return angleDesired;
+    //}
 }
