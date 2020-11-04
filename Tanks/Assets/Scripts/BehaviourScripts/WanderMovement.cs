@@ -66,6 +66,8 @@ public class WanderMovement : MonoBehaviour
             nextCheck = Time.time + checkRate;
             CheckIfIShouldWander();
         }
+
+        Debug.DrawLine(transform.position, wanderTarget, Color.blue);
     }
 
     private void CheckIfIShouldWander()

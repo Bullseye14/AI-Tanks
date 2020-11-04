@@ -45,7 +45,10 @@ public class RedTankMovement : MonoBehaviour
             SearchWalkPoint();
 
         if (walkPointSet)
+        {
             agent.SetDestination(walkPoint);
+            Debug.DrawLine(transform.position, walkPoint, Color.blue);
+        }
 
         Vector3 distanceToWalkPoint = transform.position - walkPoint;
 
