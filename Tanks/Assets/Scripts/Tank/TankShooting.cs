@@ -42,19 +42,19 @@ public class TankShooting : MonoBehaviour
 
     private void Update()
     {
-        if(!canFire)
-        {
-            delayTimer += Time.deltaTime;
-            if (delayTimer > delayTime)
-                canFire = true;
-        }
+        //if(!canFire)
+        //{
+        //    delayTimer += Time.deltaTime;
+        //    if (delayTimer > delayTime)
+        //        canFire = true;
+        //}
 
-        Vector3 distance = enemy.transform.position - transform.position;
+        //Vector3 distance = enemy.transform.position - transform.position;
 
-        distance = AbsoluteValue(distance);
+        //distance = AbsoluteValue(distance);
 
-        if (distance.x < 25f && distance.z < 25f && canFire)
-            Fire();
+        //if (distance.x < 25f && distance.z < 25f && canFire)
+        //    Fire();
 
 
         if (Input.GetKeyDown(KeyCode.Space))

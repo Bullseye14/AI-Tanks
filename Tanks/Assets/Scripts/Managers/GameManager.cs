@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
         SpawnAllTanks();
         
         SetCameraTargets();
-
+        SetUpTanks();
         StartCoroutine(GameLoop());
     }
 
