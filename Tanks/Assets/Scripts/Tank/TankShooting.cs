@@ -107,7 +107,7 @@ public class TankShooting : MonoBehaviour
     }
 
 
-    private void Fire()
+    public void Fire()
     {
         m_Fired = true;
 
@@ -129,7 +129,7 @@ public class TankShooting : MonoBehaviour
             if(this.m_PlayerNumber == 2)
             {
                 // Flee
-                ag.GetComponent<NavMeshAgent>().SetDestination(-destination);
+                //ag.GetComponent<NavMeshAgent>().SetDestination(-destination);
             }
             
             //Debug.Log(tanksDistance);
