@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.AI;
 
 public class TankShooting : MonoBehaviour
 {
@@ -25,7 +26,14 @@ public class TankShooting : MonoBehaviour
     private bool canFire = true;
     public float delayTime = 2.5f;
     private float delayTimer;
+    private NavMeshHit hit;
+    private bool blocked = false;
+    private NavMeshAgent ag;
 
+    private void Awake()
+    {
+        ag = GetComponent<NavMeshAgent>();
+    }
     private void OnEnable()
     {
         m_CurrentLaunchForce = m_MinLaunchForce;
@@ -57,10 +65,12 @@ public class TankShooting : MonoBehaviour
         //    Fire();
 
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Fire();
-        }
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    Fire();
+        //}
+
+        Fire();
 
         // if (EnemyClose(distance)) Fire(Quaternion.Euler(0, enemyAngle.y, 0));
 
@@ -99,19 +109,52 @@ public class TankShooting : MonoBehaviour
 
     private void Fire()
     {
-        canFire = false;
-
-        // Instantiate and launch the shell.
         m_Fired = true;
 
-        Rigidbody shellInstance = Instantiate(m_Shell, m_FireTransform.transform.position, m_FireTransform.transform.rotation) as Rigidbody;
+        Vector3 origin = m_FireTransform.transform.position;
+        Vector3 destination = enemy.transform.position;
 
-        shellInstance.velocity = m_CurrentLaunchForce * m_FireTransform.forward;
+        Vector3 tanksDistance = destination - origin;
 
-        m_ShootingAudio.clip = m_FireClip;
-        m_ShootingAudio.Play();
+        blocked = NavMesh.Raycast(origin, destination, out hit, NavMesh.AllAreas);
+        Debug.DrawLine(transform.position, enemy.transform.position, blocked ? Color.red : Color.green);
+        
+        if (blocked)
+        {
+            Debug.DrawRay(hit.position, Vector3.up, Color.red);
+        }
+        else
+        {
+            Debug.Log("CAN SHOOT");
+            if(this.m_PlayerNumber == 2)
+            {
+                // Flee
+                ag.GetComponent<NavMeshAgent>().SetDestination(-destination);
+            }
+            
+            //Debug.Log(tanksDistance);
+            if (Input.GetKeyDown(KeyCode.Space) && this.m_PlayerNumber == 1)
+            {
+                Rigidbody shellInstance = Instantiate(m_Shell, m_FireTransform.transform.position, m_FireTransform.transform.rotation) as Rigidbody;
+                shellInstance.velocity = m_CurrentLaunchForce * m_FireTransform.forward;
+            }
+            if (Input.GetKeyDown(KeyCode.Return) && this.m_PlayerNumber == 2)
+            {
+                Rigidbody shellInstance = Instantiate(m_Shell, m_FireTransform.transform.position, m_FireTransform.transform.rotation) as Rigidbody;
+                shellInstance.velocity = m_CurrentLaunchForce * m_FireTransform.forward;
+            }
 
-        m_CurrentLaunchForce = m_MinLaunchForce;
+        }
+
+
+
+        //Rigidbody shellInstance = Instantiate(m_Shell, m_FireTransform.transform.position, m_FireTransform.transform.rotation) as Rigidbody;
+        //shellInstance.velocity = m_CurrentLaunchForce * m_FireTransform.forward;
+
+        //m_ShootingAudio.clip = m_FireClip;
+        //m_ShootingAudio.Play();
+
+        //m_CurrentLaunchForce = m_MinLaunchForce;
     }
 
     private bool EnemyClose(Vector3 distance)
