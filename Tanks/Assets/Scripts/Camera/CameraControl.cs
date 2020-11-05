@@ -39,13 +39,14 @@ public class CameraControl : MonoBehaviour
     {
         Vector3 averagePos = new Vector3();
         int numTargets = 0;
+        Vector3 offset = new Vector3(7.0f, 0.0f, 0.0f);
 
         for (int i = 0; i < m_Targets.Length; i++)
         {
             if (!m_Targets[i].gameObject.activeSelf)
                 continue;
 
-            averagePos += m_Targets[i].position;
+            averagePos += m_Targets[i].position + offset;
             numTargets++;
         }
 
