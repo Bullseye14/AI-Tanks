@@ -17,6 +17,8 @@ public class RedTankMovement : MonoBehaviour
     public float offset = 3f;
     private float nextMove;
     public float moveRate = 0.3f;
+    private Vector3 debugPoint;
+    public LayerMask layer;
 
 
     //public Transform RedTank;
@@ -46,8 +48,12 @@ public class RedTankMovement : MonoBehaviour
         if (Time.time > nextMove)
         {
             nextMove = Time.time + moveRate;
-            Wander2();
+
+            //Wander Movement
+            agent.SetDestination(RandomNavmeshLocation(20f));
         }
+
+        Debug.DrawLine(transform.position, debugPoint, Color.blue);
 
         //WanderMove();
     }
@@ -83,7 +89,7 @@ public class RedTankMovement : MonoBehaviour
 
     private void Wander2()
     {
-        Vector3 localTarget = new Vector3(Random.Range(-1.0f, 1.0f), 0, Random.Range(-1.0f, 1.0f));
+        Vector3 localTarget = new Vector3(Random.Range(-0.5f, 1.0f), 0, Random.Range(-0.5f, 1.0f));
         localTarget.Normalize();
         localTarget *= radius;
         localTarget += new Vector3(0, 0, offset);
@@ -93,7 +99,24 @@ public class RedTankMovement : MonoBehaviour
 
         agent.SetDestination(worldTarget);
 
-        Debug.DrawLine(transform.position, worldTarget, Color.blue);
+        debugPoint = worldTarget;
+
+    }
+
+    public Vector3 RandomNavmeshLocation(float radius)
+    {
+        Vector3 randomDirection = Random.insideUnitSphere * radius;
+        randomDirection += transform.position;
+        NavMeshHit hit;
+        Vector3 finalPosition = Vector3.zero;
+        if (NavMesh.SamplePosition(randomDirection, out hit, radius, layer))
+        {
+            finalPosition = hit.position;
+        }
+
+        debugPoint = finalPosition;
+
+        return finalPosition;
     }
 
     //private void CheckIfIShouldWander()
