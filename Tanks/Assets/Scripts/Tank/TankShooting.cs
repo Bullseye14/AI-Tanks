@@ -21,11 +21,12 @@ public class TankShooting : MonoBehaviour
 
     private string m_FireButton;         
     private float m_CurrentLaunchForce;  
-    private float m_ChargeSpeed;         
-    private bool m_Fired;
+    private float m_ChargeSpeed;
     private bool canFire = true;
-    public float delayTime = 2.5f;
-    private float delayTimer;
+    public float delay1 = 3f;
+    public float delay2 = 2f;
+    private float delayTimer1;
+    private float delayTimer2;
     private NavMeshHit hit;
     private bool blocked = false;
     private NavMeshAgent ag;
@@ -50,130 +51,78 @@ public class TankShooting : MonoBehaviour
 
     private void Update()
     {
-        //if(!canFire)
-        //{
-        //    delayTimer += Time.deltaTime;
-        //    if (delayTimer > delayTime)
-        //        canFire = true;
-        //}
-
-        //Vector3 distance = enemy.transform.position - transform.position;
-
-        //distance = AbsoluteValue(distance);
-
-        //if (distance.x < 25f && distance.z < 25f && canFire)
-        //    Fire();
-
-
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    Fire();
-        //}
-
-        Fire();
-
-        // if (EnemyClose(distance)) Fire(Quaternion.Euler(0, enemyAngle.y, 0));
-
-        //// Track the current state of the fire button and make decisions based on the current launch force.
-        //m_AimSlider.value = m_MinLaunchForce;
-
-        //// Max Charge, not fired
-        //if(m_CurrentLaunchForce >= m_MaxLaunchForce && !m_Fired)
-        //{
-        //    m_CurrentLaunchForce = m_MaxLaunchForce;
-        //    Fire();
-        //}
-        //// Pressed for the first time
-        //else if(Input.GetButtonDown(m_FireButton))
-        //{
-        //    m_Fired = false;
-        //    m_CurrentLaunchForce = m_MinLaunchForce;
-
-        //    m_ShootingAudio.clip = m_ChargingClip;
-        //    m_ShootingAudio.Play();
-        //}
-        //// Holding the fire
-        //else if(Input.GetButton(m_FireButton) && !m_Fired)
-        //{
-        //    m_CurrentLaunchForce += m_ChargeSpeed * Time.deltaTime;
-
-        //    m_AimSlider.value = m_CurrentLaunchForce;
-        //}
-        //// Release button
-        //else if(Input.GetButtonUp(m_FireButton) && !m_Fired)
-        //{
-        //    Fire();
-        //}
-    }
-
-
-    public void Fire()
-    {
-        m_Fired = true;
+        if (this.m_PlayerNumber == 1)
+            if (!canFire)
+            {
+                delayTimer1 += Time.deltaTime;
+                if (delayTimer1 >= delay1)
+                    canFire = true;
+            }
+        
+        if (this.m_PlayerNumber == 2)
+            if (!canFire)
+            {
+                delayTimer2 += Time.deltaTime;
+                if (delayTimer2 >= delay2)
+                    canFire = true;
+            }
 
         Vector3 origin = m_FireTransform.transform.position;
         Vector3 destination = enemy.transform.position;
 
-        Vector3 tanksDistance = destination - origin;
+        Vector3 tanksDistance = AbsoluteValue(destination - origin);
 
         blocked = NavMesh.Raycast(origin, destination, out hit, NavMesh.AllAreas);
         Debug.DrawLine(transform.position, enemy.transform.position, blocked ? Color.red : Color.green);
-        
+
         if (blocked)
-        {
             Debug.DrawRay(hit.position, Vector3.up, Color.red);
-        }
+
         else
+            if (canFire)
+            Fire(EnemyClose(tanksDistance));
+    }
+
+    public void Fire(int charge)
+    {
+        if (charge != -1)
         {
-            Debug.Log("CAN SHOOT");
-            if(this.m_PlayerNumber == 2)
-            {
-                // Flee
-                //ag.GetComponent<NavMeshAgent>().SetDestination(-destination);
-            }
-            
-            //Debug.Log(tanksDistance);
-            if (Input.GetKeyDown(KeyCode.Space) && this.m_PlayerNumber == 1)
-            {
-                Rigidbody shellInstance = Instantiate(m_Shell, m_FireTransform.transform.position, m_FireTransform.transform.rotation) as Rigidbody;
-                shellInstance.velocity = m_CurrentLaunchForce * m_FireTransform.forward;
-            }
-            if (Input.GetKeyDown(KeyCode.Return) && this.m_PlayerNumber == 2)
-            {
-                Rigidbody shellInstance = Instantiate(m_Shell, m_FireTransform.transform.position, m_FireTransform.transform.rotation) as Rigidbody;
-                shellInstance.velocity = m_CurrentLaunchForce * m_FireTransform.forward;
-            }
+            if (charge == 0)
+                m_CurrentLaunchForce = 15f;
 
+            else if (charge == 1)
+                m_CurrentLaunchForce = 17f;
+
+            else if (charge == 2)
+                m_CurrentLaunchForce = 20f;
+
+            Rigidbody shellInstance = Instantiate(m_Shell, m_FireTransform.transform.position, m_FireTransform.transform.rotation) as Rigidbody;
+            shellInstance.velocity = m_CurrentLaunchForce * m_FireTransform.forward;
+
+            canFire = false;
+
+            if (this.m_PlayerNumber == 1) delayTimer1 = 0;
+            if (this.m_PlayerNumber == 2) delayTimer2 = 0;
+
+            m_ShootingAudio.clip = m_FireClip;
+            m_ShootingAudio.Play();
+
+            m_CurrentLaunchForce = m_MinLaunchForce;
         }
-
-
-
-        //Rigidbody shellInstance = Instantiate(m_Shell, m_FireTransform.transform.position, m_FireTransform.transform.rotation) as Rigidbody;
-        //shellInstance.velocity = m_CurrentLaunchForce * m_FireTransform.forward;
-
-        //m_ShootingAudio.clip = m_FireClip;
-        //m_ShootingAudio.Play();
-
-        //m_CurrentLaunchForce = m_MinLaunchForce;
     }
 
-    private bool EnemyClose(Vector3 distance)
+    private int EnemyClose(Vector3 distance)
     {
-        return false;
-    }
-    private float CalculateAngle(Vector3 objectivePos)
-    {
-        float distanceX = objectivePos.x - transform.position.x;
-        float distanceZ = objectivePos.z - transform.position.z;
+        int ret;
 
-        float angleDesired = Mathf.Atan2(distanceX, distanceZ) * Mathf.Rad2Deg;
+        if (distance.x < 10 && distance.z < 10) ret = 0;
+        else if (distance.x < 20 && distance.z < 20) ret = 1;
+        else if (distance.x < 30 && distance.z < 30) ret = 2;
+        else ret = -1;
 
-        return angleDesired;
-    }
+        if ((ret == 2 || ret == 1) && this.m_PlayerNumber == 2) ret = -1;
 
-    private void FireNew(Vector3 enemyPos)
-    {
-
+        return ret;
     }
 
     private Vector3 AbsoluteValue(Vector3 vector)
