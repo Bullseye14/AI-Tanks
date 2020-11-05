@@ -12,7 +12,13 @@ public class RedTankMovement : MonoBehaviour
     bool walkPointSet;
     public float walkPointRange;
 
-    
+
+    public float radius = 2f;
+    public float offset = 3f;
+    private float nextMove;
+    public float moveRate = 0.3f;
+
+
     //public Transform RedTank;
     //public Transform BlueTank;
     //public float wanderRange = 10f;
@@ -36,8 +42,14 @@ public class RedTankMovement : MonoBehaviour
 
     void Update()
     {
-        
-        WanderMove();
+
+        if (Time.time > nextMove)
+        {
+            nextMove = Time.time + moveRate;
+            Wander2();
+        }
+
+        //WanderMove();
     }
 
     private void WanderMove()
@@ -69,6 +81,46 @@ public class RedTankMovement : MonoBehaviour
 
     }
 
+    private void Wander2()
+    {
+        Vector3 localTarget = new Vector3(Random.Range(-1.0f, 1.0f), 0, Random.Range(-1.0f, 1.0f));
+        localTarget.Normalize();
+        localTarget *= radius;
+        localTarget += new Vector3(0, 0, offset);
+
+        Vector3 worldTarget = transform.TransformPoint(localTarget);
+        worldTarget.y = 0f;
+
+        agent.SetDestination(worldTarget);
+
+        Debug.DrawLine(transform.position, worldTarget, Color.blue);
+    }
+
+    //private void CheckIfIShouldWander()
+    //{
+    //    if (RandomWanderTarget(transform.position, wanderRange, out wanderTarget))
+    //    {
+    //        agent.SetDestination(wanderTarget);
+    //    }
+    //}
+
+    //private bool RandomWanderTarget(Vector3 centre, float range, out Vector3 result)
+    //{
+    //    Vector3 randomPoint = centre + Random.insideUnitSphere * wanderRange;
+    //    Gizmos.DrawSphere(centre, wanderRange);
+    //    if (NavMesh.SamplePosition(randomPoint, out navHit, 1.0f, NavMesh.AllAreas))
+    //    {
+    //        result = navHit.position;
+    //        return true;
+    //    }
+    //    else
+    //    {
+    //        result = centre;
+    //        return false;
+    //    }
+
+    //}
+
     //private void CheckIfIShouldWander()
     //{
     //    if (RandomWanderTarget(RedTank.position, wanderRange, out wanderTarget))
@@ -91,4 +143,6 @@ public class RedTankMovement : MonoBehaviour
     //        return false;
     //    }
     //}
+
+
 }
