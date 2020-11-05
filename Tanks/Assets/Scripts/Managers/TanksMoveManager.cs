@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TanksMoveManager : MonoBehaviour
 {
@@ -11,8 +12,10 @@ public class TanksMoveManager : MonoBehaviour
     public float detectDistance = 20f;
     public bool BPatrol, BChase;
     public bool RWander, RFlee;
-    public float TimeDuration = 3f;
-    private float stopTime;
+    //public float TimeDuration;
+    //private float stopTime;
+
+    public Text distance;
     
 
     private void Awake()
@@ -33,6 +36,8 @@ public class TanksMoveManager : MonoBehaviour
 
         if (Blue_distanceBetween.magnitude >= detectDistance || Red_distanceBetween.magnitude >= detectDistance) // Not detected
         {
+            Debug.Log("Not detecting - Patrol & Wander");
+
             BPatrol = true;
             RWander = true;
 
@@ -40,24 +45,33 @@ public class TanksMoveManager : MonoBehaviour
             RFlee = false;
         }
 
-        else if (Blue_distanceBetween.magnitude < detectDistance || Red_distanceBetween.magnitude < detectDistance) // Detected
+        if (Blue_distanceBetween.magnitude < detectDistance || Red_distanceBetween.magnitude < detectDistance) // Detected
         {
-            if (Time.time > stopTime)
-            {
-                stopTime = Time.time + TimeDuration;
-                BChase = true;
-                RFlee = true;
-            }
-            else
-            {
-                BChase = false;
-                RFlee = false;
-            }
+            //Debug.Log(TimeDuration);
+
+            BChase = true;
+            RFlee = true;
 
             BPatrol = false;
             RWander = false;
+
+            //BPatrol = false;
+            //RWander = false;
+
+            //if (Time.time > stopTime) // if the red tank hadn't had time to escape, they will fight
+            //{
+            //    stopTime = Time.time + TimeDuration;
+            //    BChase = true;
+            //    RFlee = true;
+            //}
+            //else
+            //{
+            //    BChase = false;
+            //    RFlee = false;
+            //}
+
         }
 
-        Debug.Log(Blue_distanceBetween.magnitude);
+        distance.text = Blue_distanceBetween.magnitude.ToString();
     }
 }

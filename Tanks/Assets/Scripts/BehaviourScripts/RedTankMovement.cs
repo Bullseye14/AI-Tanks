@@ -47,7 +47,7 @@ public class RedTankMovement : MonoBehaviour
     {
         if (MoveManager.RWander)
             WanderMove();
-        if (MoveManager.RFlee)
+        else if (MoveManager.RFlee)
             FleeMove();
         
         Debug.DrawLine(transform.position, debugPoint, Color.blue);

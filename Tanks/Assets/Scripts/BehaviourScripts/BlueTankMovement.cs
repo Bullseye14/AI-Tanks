@@ -42,7 +42,7 @@ public class BlueTankMovement : MonoBehaviour
 
         if (MoveManager.BPatrol)
             PatrolMove();
-        if (MoveManager.BChase)
+        else if (MoveManager.BChase)
             ChaseMove();
 
     }
