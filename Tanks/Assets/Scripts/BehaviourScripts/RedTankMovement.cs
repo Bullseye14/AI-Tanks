@@ -11,7 +11,8 @@ public class RedTankMovement : MonoBehaviour
     public Vector3 walkPoint;
     bool walkPointSet;
     public float walkPointRange;
-
+    public Transform BlueTank;
+    public TanksMoveManager MoveManager;
 
     public float radius = 2f;
     public float offset = 3f;
@@ -44,63 +45,29 @@ public class RedTankMovement : MonoBehaviour
 
     void Update()
     {
+        if (MoveManager.RWander)
+            WanderMove();
+        if (MoveManager.RFlee)
+            FleeMove();
+        
+        Debug.DrawLine(transform.position, debugPoint, Color.blue);
 
+    }
+
+    public void WanderMove()
+    {
         if (Time.time > nextMove)
         {
             nextMove = Time.time + moveRate;
 
-            //Wander Movement
             agent.SetDestination(RandomNavmeshLocation(20f));
         }
 
-        Debug.DrawLine(transform.position, debugPoint, Color.blue);
-
-        //WanderMove();
     }
 
-    private void WanderMove()
+    public void FleeMove()
     {
-        if (!walkPointSet)
-            SearchWalkPoint();
-
-        if (walkPointSet)
-        {
-            agent.SetDestination(walkPoint);
-            Debug.DrawLine(transform.position, walkPoint, Color.blue);
-        }
-
-        Vector3 distanceToWalkPoint = transform.position - walkPoint;
-
-        if (distanceToWalkPoint.magnitude < 1f)
-            walkPointSet = false;
-    }
-
-    private void SearchWalkPoint()
-    {
-        float rndZ = Random.Range(-walkPointRange, walkPointRange);
-        float rndX = Random.Range(-walkPointRange, walkPointRange);
-
-        walkPoint = new Vector3(transform.position.x + rndX, transform.position.y, transform.position.z + rndZ);
-
-        if (Physics.Raycast(walkPoint, -transform.up, layerMask))
-            walkPointSet = true;
-
-    }
-
-    private void Wander2()
-    {
-        Vector3 localTarget = new Vector3(Random.Range(-0.5f, 1.0f), 0, Random.Range(-0.5f, 1.0f));
-        localTarget.Normalize();
-        localTarget *= radius;
-        localTarget += new Vector3(0, 0, offset);
-
-        Vector3 worldTarget = transform.TransformPoint(localTarget);
-        worldTarget.y = 0f;
-
-        agent.SetDestination(worldTarget);
-
-        debugPoint = worldTarget;
-
+        agent.SetDestination(-BlueTank.position);
     }
 
     public Vector3 RandomNavmeshLocation(float radius)
@@ -118,6 +85,51 @@ public class RedTankMovement : MonoBehaviour
 
         return finalPosition;
     }
+
+    //private void Wander3()
+    //{
+    //    if (!walkPointSet)
+    //        SearchWalkPoint();
+
+    //    if (walkPointSet)
+    //    {
+    //        agent.SetDestination(walkPoint);
+    //        Debug.DrawLine(transform.position, walkPoint, Color.blue);
+    //    }
+
+    //    Vector3 distanceToWalkPoint = transform.position - walkPoint;
+
+    //    if (distanceToWalkPoint.magnitude < 1f)
+    //        walkPointSet = false;
+    //}
+
+    //private void SearchWalkPoint()
+    //{
+    //    float rndZ = Random.Range(-walkPointRange, walkPointRange);
+    //    float rndX = Random.Range(-walkPointRange, walkPointRange);
+
+    //    walkPoint = new Vector3(transform.position.x + rndX, transform.position.y, transform.position.z + rndZ);
+
+    //    if (Physics.Raycast(walkPoint, -transform.up, layerMask))
+    //        walkPointSet = true;
+
+    //}
+
+    //private void Wander2()
+    //{
+    //    Vector3 localTarget = new Vector3(Random.Range(-0.5f, 1.0f), 0, Random.Range(-0.5f, 1.0f));
+    //    localTarget.Normalize();
+    //    localTarget *= radius;
+    //    localTarget += new Vector3(0, 0, offset);
+
+    //    Vector3 worldTarget = transform.TransformPoint(localTarget);
+    //    worldTarget.y = 0f;
+
+    //    agent.SetDestination(worldTarget);
+
+    //    debugPoint = worldTarget;
+
+    //}
 
     //private void CheckIfIShouldWander()
     //{

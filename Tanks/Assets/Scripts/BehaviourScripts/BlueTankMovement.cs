@@ -5,19 +5,24 @@ using UnityEngine.AI;
 
 public class BlueTankMovement : MonoBehaviour
 {
+    public Transform RedTank;
+    public Vector3 distanceBetweenTanks;
+    public bool BluePatrol, BlueChase;
+    public TanksMoveManager MoveManager;
+
     // Patrolling Movement Variables
     private NavMeshAgent agent;
     private int currentWaypoint;
     private bool isTravelling;
     private bool nextWaypoint = false;
     private Vector3 target;
-
-    // Public
     public List<WayPoints> waypoints; // List of all waypoints in the game
 
     private void Awake()
     {
+        RedTank = GameObject.Find("Tank2").transform;
         agent = GetComponent<NavMeshAgent>();
+        
     }
 
     // Start is called before the first frame update
@@ -33,13 +38,13 @@ public class BlueTankMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isTravelling && agent.remainingDistance <= 0.5f)
-        {
-            isTravelling = false;
+        //distanceBetweenTanks = RedTank.position - transform.position;
 
-            ChangePatrolPoint();
-            SetDestination();
-        }
+        if (MoveManager.BPatrol)
+            PatrolMove();
+        if (MoveManager.BChase)
+            ChaseMove();
+
     }
 
     private void SetDestination()
@@ -61,5 +66,22 @@ public class BlueTankMovement : MonoBehaviour
             if (--currentWaypoint < 0)
                 currentWaypoint = waypoints.Count - 1;
         }
+    }
+
+    private void PatrolMove()
+    {
+        if (isTravelling && agent.remainingDistance <= 0.5f)
+        {
+            isTravelling = false;
+
+            ChangePatrolPoint();
+            SetDestination();
+        }
+    }
+
+    private void ChaseMove()
+    {
+        //if(agent.remainingDistance <= 1f)
+        agent.SetDestination(RedTank.position);
     }
 }
