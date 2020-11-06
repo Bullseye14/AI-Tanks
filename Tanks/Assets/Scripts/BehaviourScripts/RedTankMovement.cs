@@ -13,6 +13,8 @@ public class RedTankMovement : MonoBehaviour
     public float walkPointRange;
     public Transform BlueTank;
     public TanksMoveManager MoveManager;
+    public GameObject WanderB;
+    public GameObject FleeB;
 
     public float radius = 2f;
     public float offset = 3f;
@@ -46,10 +48,17 @@ public class RedTankMovement : MonoBehaviour
     void Update()
     {
         if (MoveManager.RWander)
+        {
+            WanderB.SetActive(true);
             WanderMove();
+        }
+            
         else if (MoveManager.RFlee)
+        {
+            FleeB.SetActive(true);
             FleeMove();
-        
+        }
+            
         Debug.DrawLine(transform.position, debugPoint, Color.blue);
 
     }

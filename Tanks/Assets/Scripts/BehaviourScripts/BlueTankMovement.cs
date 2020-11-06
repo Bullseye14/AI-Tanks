@@ -9,6 +9,8 @@ public class BlueTankMovement : MonoBehaviour
     public Vector3 distanceBetweenTanks;
     public bool BluePatrol, BlueChase;
     public TanksMoveManager MoveManager;
+    public GameObject PatrolB;
+    public GameObject ChaseB;
 
     // Patrolling Movement Variables
     private NavMeshAgent agent;
@@ -40,9 +42,16 @@ public class BlueTankMovement : MonoBehaviour
         if (!RedTank.activeSelf) currentWaypoint = 0;
 
         if (MoveManager.BPatrol)
+        {
+            PatrolB.SetActive(true);
             PatrolMove();
+        }
+            
         else if (MoveManager.BChase)
+        {
+            ChaseB.SetActive(true);
             ChaseMove();
+        }
 
     }
 
@@ -80,7 +89,6 @@ public class BlueTankMovement : MonoBehaviour
 
     private void ChaseMove()
     {
-        //if(agent.remainingDistance <= 1f)
         agent.SetDestination(RedTank.transform.position);
     }
 }
