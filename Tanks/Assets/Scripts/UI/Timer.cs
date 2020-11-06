@@ -10,7 +10,7 @@ public class Timer : MonoBehaviour
 
     public float timeStart;
     public Text textBox;
-    private bool timerActive;
+    public bool timerActive;
 
     private void Awake()
     {
@@ -24,22 +24,11 @@ public class Timer : MonoBehaviour
 
     void Update()
     {
-        if(timerActive)
-        {
+        if (timerActive)
             timeStart += Time.deltaTime;
-            textBox.text = FloatToTime(timeStart, "#00:00");
-        }
+
+        textBox.text = FloatToTime(timeStart, "#00:00");
     }
-    public void BeginTime()
-    {
-
-    }
-
-    public void StopTime()
-    {
-
-    }
-
 
     public string FloatToTime(float toConvert, string format)
     {

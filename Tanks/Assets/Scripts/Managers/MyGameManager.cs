@@ -36,6 +36,7 @@ public class MyGameManager : MonoBehaviour
                 if (blueTank.activeSelf) blueWins += 1;
                 else if (redTank.activeSelf) redWins += 1;
 
+                Timer.instance.timerActive = false;
                 gameFinished = true;
             }
 
@@ -49,7 +50,8 @@ public class MyGameManager : MonoBehaviour
         gameFinished = false;
         endTimer = 0;
 
-        Timer.instance.BeginTime();
+        Timer.instance.timeStart = 0;
+        Timer.instance.timerActive = true;
     }
 
     public void RestartGame()
