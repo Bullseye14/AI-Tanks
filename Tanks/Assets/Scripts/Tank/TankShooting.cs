@@ -106,4 +106,44 @@ public class TankShooting : MonoBehaviour
 
         return vector;
     }
+
+    private Vector3 ProjectileMotion(float currentForce, Vector3 forward)
+    {
+        Vector3 ret = forward;
+        float initialVelocity = currentForce;
+        float gravity = 9.81f;
+
+        ret.y = FunctionImpact(initialVelocity, gravity, forward.x, forward.z, forward.y);
+
+        return ret;
+    }
+
+    private float FunctionImpact(float v, float g, float x, float y, float angleY)
+    {
+        float ret;
+
+        float sqrt = Mathf.Sqrt(v * v * v * v - g * (g * x * x + 2 * y * v * v));
+
+        float angle;
+
+        if (v * v - sqrt > 0)
+        {
+            angle = ((v * v - sqrt) / (g * x)) * Mathf.Rad2Deg;
+            angle = Mathf.Atan(angle);
+
+            ret = angle;
+        }
+
+        else if (v * v + sqrt > 0)
+        {
+            angle = ((v * v + sqrt) / (g * x)) * Mathf.Rad2Deg;
+            angle = Mathf.Atan(angle);
+
+            ret = angle;
+        }
+
+        else ret = angleY;
+
+        return ret;
+    }
 }
