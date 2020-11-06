@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class BlueTankMovement : MonoBehaviour
 {
-    public Transform RedTank;
+    public GameObject RedTank;
     public Vector3 distanceBetweenTanks;
     public bool BluePatrol, BlueChase;
     public TanksMoveManager MoveManager;
@@ -20,9 +20,7 @@ public class BlueTankMovement : MonoBehaviour
 
     private void Awake()
     {
-        RedTank = GameObject.Find("Tank2").transform;
         agent = GetComponent<NavMeshAgent>();
-        
     }
 
     // Start is called before the first frame update
@@ -39,6 +37,7 @@ public class BlueTankMovement : MonoBehaviour
     void Update()
     {
         //distanceBetweenTanks = RedTank.position - transform.position;
+        if (!RedTank.activeSelf) currentWaypoint = 0;
 
         if (MoveManager.BPatrol)
             PatrolMove();
@@ -82,6 +81,6 @@ public class BlueTankMovement : MonoBehaviour
     private void ChaseMove()
     {
         //if(agent.remainingDistance <= 1f)
-        agent.SetDestination(RedTank.position);
+        agent.SetDestination(RedTank.transform.position);
     }
 }

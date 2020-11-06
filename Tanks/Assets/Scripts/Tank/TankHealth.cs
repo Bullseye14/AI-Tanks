@@ -10,11 +10,10 @@ public class TankHealth : MonoBehaviour
     public Color m_ZeroHealthColor = Color.red;    
     public GameObject m_ExplosionPrefab;
     
-    
     private AudioSource m_ExplosionAudio;          
     private ParticleSystem m_ExplosionParticles;   
-    private float m_CurrentHealth;  
-    private bool m_Dead;            
+    public float m_CurrentHealth;  
+    public bool m_Dead;            
 
 
     private void Awake()
@@ -61,7 +60,6 @@ public class TankHealth : MonoBehaviour
     private void OnDeath()
     {
         // Play the effects for the death of the tank and deactivate it.
-
         m_Dead = true;
 
         m_ExplosionParticles.transform.position = transform.position;

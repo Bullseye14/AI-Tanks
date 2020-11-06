@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class TanksMoveManager : MonoBehaviour
 {
-    public Transform RedTank;
-    public Transform BlueTank;
+    public GameObject RedTank;
+    public GameObject BlueTank;
     public Vector3 Blue_distanceBetween;
     public Vector3 Red_distanceBetween;
     public float detectDistance = 20f;
@@ -20,8 +20,6 @@ public class TanksMoveManager : MonoBehaviour
 
     private void Awake()
     {
-        BlueTank = GameObject.Find("Tank1").transform;
-        RedTank = GameObject.Find("Tank2").transform;
     }
     void Start()
     {
@@ -31,10 +29,10 @@ public class TanksMoveManager : MonoBehaviour
 
     void Update()
     {
-        Blue_distanceBetween = RedTank.position - BlueTank.position;
-        Red_distanceBetween = BlueTank.position - RedTank.position;
+        Blue_distanceBetween = RedTank.transform.position - BlueTank.transform.position;
+        Red_distanceBetween = BlueTank.transform.position - RedTank.transform.position;
 
-        if (Blue_distanceBetween.magnitude >= detectDistance || Red_distanceBetween.magnitude >= detectDistance) // Not detected
+        if (Blue_distanceBetween.magnitude >= detectDistance || Red_distanceBetween.magnitude >= detectDistance || !RedTank.activeSelf || !BlueTank.activeSelf) // Not detected
         {
             Debug.Log("Not detecting - Patrol & Wander");
 
