@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MyGameManager : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class MyGameManager : MonoBehaviour
     public float endDelay = 5f;
     public int redWins = 0;
     public int blueWins = 0;
+    public Text BWins_text;
+    public Text RWins_text;
 
     void Start()
     {
@@ -39,6 +42,9 @@ public class MyGameManager : MonoBehaviour
                 Timer.instance.timerActive = false;
                 gameFinished = true;
             }
+
+            BWins_text.text = blueWins.ToString();
+            RWins_text.text = redWins.ToString();
 
             RestartGame();
         }
