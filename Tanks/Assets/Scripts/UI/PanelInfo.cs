@@ -8,10 +8,23 @@ public class PanelInfo : MonoBehaviour
     public GameObject Panel;
     private bool isActive;
 
+    private void Start()
+    {
+        isActive = true;
+    }
     public void OpenPanel()
     {
-        isActive = !isActive;
-        Panel.gameObject.SetActive(isActive);
+        if (isActive)
+        {
+            Time.timeScale = 0f;
+            Panel.SetActive(isActive);
+            isActive = !isActive;
+        }
+        else
+        {
+            Time.timeScale = 1f;
+            Panel.SetActive(isActive);
+            isActive = !isActive;
+        }
     }
-
 }
