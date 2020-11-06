@@ -14,40 +14,19 @@ public class TankShooting : MonoBehaviour
     public Slider m_AimSlider;           
     public AudioSource m_ShootingAudio;  
     public AudioClip m_ChargingClip;     
-    public AudioClip m_FireClip;         
-    public float m_MinLaunchForce = 15f; 
-    public float m_MaxLaunchForce = 30f; 
-    public float m_MaxChargeTime = 0.75f;
-
-    private string m_FireButton;         
-    private float m_CurrentLaunchForce;  
-    private float m_ChargeSpeed;
-    private bool canFire = true;
+    public AudioClip m_FireClip;
     public float delay1 = 3f;
     public float delay2 = 2f;
+    public float minDistance = 10;
+    public float midDistance = 15;
+    public float maxDistance = 20;
+
+    private float m_CurrentLaunchForce;
+    private bool canFire = true;
     private float delayTimer1;
     private float delayTimer2;
     private NavMeshHit hit;
     private bool blocked = false;
-    private NavMeshAgent ag;
-
-    private void Awake()
-    {
-        ag = GetComponent<NavMeshAgent>();
-    }
-    private void OnEnable()
-    {
-        m_CurrentLaunchForce = m_MinLaunchForce;
-        m_AimSlider.value = m_MinLaunchForce;
-    }
-
-
-    private void Start()
-    {
-        m_FireButton = "Fire" + m_PlayerNumber;
-
-        m_ChargeSpeed = (m_MaxLaunchForce - m_MinLaunchForce) / m_MaxChargeTime;
-    }
 
     private void Update()
     {
@@ -107,7 +86,7 @@ public class TankShooting : MonoBehaviour
             m_ShootingAudio.clip = m_FireClip;
             m_ShootingAudio.Play();
 
-            m_CurrentLaunchForce = m_MinLaunchForce;
+            m_CurrentLaunchForce = 15f;
         }
     }
 
@@ -115,12 +94,17 @@ public class TankShooting : MonoBehaviour
     {
         int ret;
 
-        if (distance.x < 10 && distance.z < 10) ret = 0;
-        else if (distance.x < 20 && distance.z < 20) ret = 1;
-        else if (distance.x < 30 && distance.z < 30) ret = 2;
+        if (Mathf.Sqrt((distance.x * distance.x) + (distance.z * distance.z)) < minDistance) ret = 0;
+        else if (Mathf.Sqrt((distance.x * distance.x) + (distance.z * distance.z)) < midDistance) ret = 1;
+        else if (Mathf.Sqrt((distance.x * distance.x) + (distance.z * distance.z)) < maxDistance) ret = 2;
         else ret = -1;
 
-        if ((ret == 2 || ret == 1) && this.m_PlayerNumber == 2) ret = -1;
+        //if (distance.x < minDistance && distance.z < minDistance) ret = 0;
+        //else if (distance.x < midDistance && distance.z < midDistance) ret = 1;
+        //else if (distance.x < maxDistance && distance.z < maxDistance) ret = 2;
+        //else ret = -1;
+
+        if ((ret == 2) && this.m_PlayerNumber == 2) ret = -1;
 
         return ret;
     }
