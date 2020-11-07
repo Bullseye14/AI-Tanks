@@ -21,6 +21,9 @@ public class RedTankMovement : MonoBehaviour
     private float nextMove;
     public float moveRate = 0.3f;
     private Vector3 debugPoint;
+    private bool shownBubble1 = true;
+    private bool shownBubble2 = false;
+
     public LayerMask layer;
 
 
@@ -49,13 +52,25 @@ public class RedTankMovement : MonoBehaviour
     {
         if (MoveManager.RWander)
         {
-            WanderB.SetActive(true);
+            shownBubble2 = false;
+            if (!shownBubble1)
+            {
+                AppearSpriteRed.SpriteRedInstance.visible1 = true;
+                AppearSpriteRed.SpriteRedInstance.visible2 = false;
+                shownBubble1 = true;
+            }
             WanderMove();
         }
             
         else if (MoveManager.RFlee)
         {
-            FleeB.SetActive(true);
+            shownBubble1 = false;
+            if (!shownBubble2)
+            {
+                AppearSpriteRed.SpriteRedInstance.visible2 = true;
+                AppearSpriteRed.SpriteRedInstance.visible1 = false;
+                shownBubble2 = true;
+            }
             FleeMove();
         }
             

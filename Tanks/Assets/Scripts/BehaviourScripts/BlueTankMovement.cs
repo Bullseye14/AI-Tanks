@@ -18,6 +18,9 @@ public class BlueTankMovement : MonoBehaviour
     private bool isTravelling;
     private bool nextWaypoint = false;
     private Vector3 target;
+    private bool shownBubble1 = true;
+    private bool shownBubble2 = false;
+
     public List<WayPoints> waypoints; // List of all waypoints in the game
 
     private void Awake()
@@ -43,13 +46,25 @@ public class BlueTankMovement : MonoBehaviour
 
         if (MoveManager.BPatrol)
         {
-            PatrolB.SetActive(true);
+            shownBubble2 = false;
+            if(!shownBubble1)
+            {
+                AppearSpriteBlue.SpriteBlueInstance.visible1 = true;
+                AppearSpriteBlue.SpriteBlueInstance.visible2 = false;
+                shownBubble1 = true;
+            }
             PatrolMove();
         }
             
         else if (MoveManager.BChase)
         {
-            ChaseB.SetActive(true);
+            shownBubble1 = false;
+            if (!shownBubble2)
+            {
+                AppearSpriteBlue.SpriteBlueInstance.visible2 = true;
+                AppearSpriteBlue.SpriteBlueInstance.visible1 = false;
+                shownBubble2 = true;
+            }
             ChaseMove();
         }
 
