@@ -13,8 +13,6 @@ public class RedTankMovement : MonoBehaviour
     public float walkPointRange;
     public Transform BlueTank;
     public TanksMoveManager MoveManager;
-    public GameObject WanderB;
-    public GameObject FleeB;
 
     public float radius = 2f;
     public float offset = 3f;

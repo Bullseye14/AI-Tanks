@@ -47,10 +47,11 @@ public class TankShooting : MonoBehaviour
             Debug.DrawLine(transform.position, enemy.transform.position, blocked ? Color.red : Color.green);
 
             if (blocked)
+            {
+                canFire = false;
                 Debug.DrawRay(hit.position, Vector3.up, Color.red);
-
-            else
-                if (canFire)
+            } 
+            else if (!blocked && canFire)
                 Fire(EnemyClose(tanksDistance));
         }
     }

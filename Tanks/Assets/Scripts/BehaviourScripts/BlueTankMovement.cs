@@ -9,8 +9,6 @@ public class BlueTankMovement : MonoBehaviour
     public Vector3 distanceBetweenTanks;
     public bool BluePatrol, BlueChase;
     public TanksMoveManager MoveManager;
-    public GameObject PatrolB;
-    public GameObject ChaseB;
 
     // Patrolling Movement Variables
     private NavMeshAgent agent;
