@@ -38,10 +38,23 @@ public class MyGameManager : MonoBehaviour
     {
         if (!redTank.activeSelf || !blueTank.activeSelf)
         {
+            AppearSpriteRed.SpriteRedInstance.visible1 = false;
+            AppearSpriteRed.SpriteRedInstance.visible2 = false;
+            AppearSpriteBlue.SpriteBlueInstance.visible1 = false;
+            AppearSpriteBlue.SpriteBlueInstance.visible2 = false;
+
             if (!gameFinished)
             {
-                if (blueTank.activeSelf) blueWins += 1;
-                else if (redTank.activeSelf) redWins += 1;
+                if (blueTank.activeSelf)
+                {
+                    blueWins += 1;
+                    AppearSpriteBlue.SpriteBlueInstance.visible3 = true;
+                }
+                else if (redTank.activeSelf)
+                {
+                    redWins += 1;
+                    AppearSpriteRed.SpriteRedInstance.visible3 = true;
+                }
 
                 Timer.instance.timerActive = false;
                 gameFinished = true;
@@ -52,9 +65,6 @@ public class MyGameManager : MonoBehaviour
 
             RestartGame();
         }
-
-        if (blueWins == 3 || redWins == 3)
-            GameIsOver();
     }
 
     public void BeginGame()
@@ -62,6 +72,9 @@ public class MyGameManager : MonoBehaviour
         restartingGame = false;
         gameFinished = false;
         endTimer = 0;
+
+        AppearSpriteBlue.SpriteBlueInstance.visible3 = false;
+        AppearSpriteRed.SpriteRedInstance.visible3 = false;
 
         Timer.instance.timeStart = 0;
         Timer.instance.timerActive = true;
@@ -79,18 +92,24 @@ public class MyGameManager : MonoBehaviour
         // Restarting Game
         else
         {
-            tankHealth1.m_Dead = false; tankHealth2.m_Dead = false;
-            blueTank.SetActive(true); redTank.SetActive(true);
-            TanksMove.BPatrol = true; TanksMove.RWander = true;
+            if (blueWins == 3 || redWins == 3)
+                GameIsOver();
 
-            tankHealth1.m_Slider.value = tankHealth1.m_CurrentHealth = tankHealth1.m_StartingHealth;
-            tankHealth2.m_Slider.value = tankHealth2.m_CurrentHealth = tankHealth2.m_StartingHealth;
-            tankHealth1.m_FillImage.color = tankHealth2.m_FillImage.color = Color.green;
+            else
+            {
+                tankHealth1.m_Dead = false; tankHealth2.m_Dead = false;
+                blueTank.SetActive(true); redTank.SetActive(true);
+                TanksMove.BPatrol = true; TanksMove.RWander = true;
 
-            redTank.transform.position = redInitialPos;
-            blueTank.transform.position = blueInitialPos;
+                tankHealth1.m_Slider.value = tankHealth1.m_CurrentHealth = tankHealth1.m_StartingHealth;
+                tankHealth2.m_Slider.value = tankHealth2.m_CurrentHealth = tankHealth2.m_StartingHealth;
+                tankHealth1.m_FillImage.color = tankHealth2.m_FillImage.color = Color.green;
 
-            BeginGame();
+                redTank.transform.position = redInitialPos;
+                blueTank.transform.position = blueInitialPos;
+
+                BeginGame();
+            }            
         }
     }
 
