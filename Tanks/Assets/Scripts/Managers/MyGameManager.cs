@@ -4,6 +4,7 @@ using System.Dynamic;
 using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class MyGameManager : MonoBehaviour
 {
@@ -51,6 +52,9 @@ public class MyGameManager : MonoBehaviour
 
             RestartGame();
         }
+
+        if (blueWins == 3 || redWins == 3)
+            GameIsOver();
     }
 
     public void BeginGame()
@@ -88,5 +92,10 @@ public class MyGameManager : MonoBehaviour
 
             BeginGame();
         }
+    }
+
+    public void GameIsOver()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 }
