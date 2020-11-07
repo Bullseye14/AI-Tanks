@@ -20,10 +20,19 @@ public class MyGameManager : MonoBehaviour
     public float endDelay = 5f;
     public int redWins = 0;
     public int blueWins = 0;
+    public int redKills = 0;
+    public int blueKills = 0;
+    public int redDeaths = 0;
+    public int blueDeaths = 0;
+    public Text redK_text;
+    public Text blueK_text;
+    public Text redD_text;
+    public Text blueD_text;
     public Text BWins_text;
     public Text RWins_text;
 
     public TanksMoveManager TanksMove;
+    public FinalPanel finalPanel;
 
     void Start()
     {
@@ -48,11 +57,15 @@ public class MyGameManager : MonoBehaviour
                 if (blueTank.activeSelf)
                 {
                     blueWins += 1;
+                    blueKills += 1;
+                    redDeaths += 1;
                     AppearSpriteBlue.SpriteBlueInstance.visible3 = true;
                 }
                 else if (redTank.activeSelf)
                 {
                     redWins += 1;
+                    redKills += 1;
+                    blueDeaths += 1;
                     AppearSpriteRed.SpriteRedInstance.visible3 = true;
                 }
 
@@ -60,8 +73,15 @@ public class MyGameManager : MonoBehaviour
                 gameFinished = true;
             }
 
+            // Wins UI
             BWins_text.text = blueWins.ToString();
             RWins_text.text = redWins.ToString();
+
+            // KD UI
+            redK_text.text = redKills.ToString();
+            blueK_text.text = blueKills.ToString();
+            redD_text.text = redDeaths.ToString();
+            blueD_text.text = blueDeaths.ToString();
 
             RestartGame();
         }
@@ -115,6 +135,10 @@ public class MyGameManager : MonoBehaviour
 
     public void GameIsOver()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        if (blueWins == 3)
+            finalPanel.OpenFinalBluePanel();
+
+        if (redWins == 3)
+            finalPanel.OpenFinalRedPanel();
     }
 }
