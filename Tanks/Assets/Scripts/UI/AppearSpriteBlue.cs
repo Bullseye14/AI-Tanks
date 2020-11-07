@@ -14,7 +14,7 @@ public class AppearSpriteBlue : MonoBehaviour
     public bool visible3;
 
     private Vector3 initialPos;
-    private float appearTime = 4f;
+    private float appearTime = 3f;
     private float appearing1;
     private float appearing2;
 
