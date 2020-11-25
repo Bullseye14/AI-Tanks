@@ -54,10 +54,10 @@ namespace BBUnity.Actions
                                                  area.transform.position.y,
                                                  area.transform.position.z + distance * Mathf.Sin(angle));
                 }
-                else
-                {
-                    Debug.LogError("The " + area + " GameObject must have a Box Collider or a Sphere Collider component", gameObject);
-                }
+                //else
+                //{
+                //    Debug.LogError("The " + area + " GameObject must have a Box Collider or a Sphere Collider component", gameObject);
+                //}
             }
         }
 
