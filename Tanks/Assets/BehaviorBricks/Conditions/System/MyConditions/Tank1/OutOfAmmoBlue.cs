@@ -10,8 +10,12 @@ using UnityEngine.AI;
 [Help("Checks if the blue tank is out of ammo or not")]
 public class OutOfAmmoBlue : ConditionBase
 {
+    public int blue_bullets = 5;
     public override bool Check()
     {
-        return false;
+        if (blue_bullets == 0)
+            return true;
+        else
+            return false;
     }
 }

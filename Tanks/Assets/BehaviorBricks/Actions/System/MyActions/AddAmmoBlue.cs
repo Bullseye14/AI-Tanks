@@ -6,13 +6,14 @@ using Pada1.BBCore;
 using Pada1.BBCore.Tasks;
 using Pada1.BBCore.Framework;
 
-[Action("MyActions/AddAmmoBlue")]
-
-public class AddAmmoBlue : BasePrimitiveAction
+namespace BBUnity.Actions
 {
-    public override TaskStatus OnUpdate()
+    [Action("MyActions/AddAmmoBlue")]
+
+    public class AddAmmoBlue : GOAction
     {
-        // code for return base blue tank
-        return base.OnUpdate();
+
     }
 }
+
+

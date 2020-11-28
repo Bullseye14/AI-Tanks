@@ -6,9 +6,9 @@ using Pada1.BBCore;
 
 using UnityEngine.AI;
 
-[Condition("MyConditions/Can Shoot ?")]
+[Condition("MyConditions/Tank1/Can Shoot Blue Tank?")]
 [Help("Checks if the tank can shoot or not")]
-public class CanShoot : ConditionBase
+public class CanShootBlue : ConditionBase
 {
     public override bool Check()
     {
