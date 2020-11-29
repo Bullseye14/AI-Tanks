@@ -17,18 +17,20 @@ namespace BBUnity.Actions
         private float m_CurrentLaunchForce;
         private bool canFire = true;
         private float delayTimer;
-        private float delay;
+        [InParam("delay")]
+        public float delay;
         private float minDistance = 10;
         private float midDistance = 15;
         private float maxDistance = 20;
         private Vector3 destination;
         private Vector3 origin;
 
-        public AudioSource m_ShootingAudio;
-        public AudioClip m_ChargingClip;
-        public AudioClip m_FireClip;
+        //public AudioSource m_ShootingAudio;
+        //public AudioClip m_ChargingClip;
+        //public AudioClip m_FireClip;
 
-        CanShootBlue condition;
+        
+        //CanShootBlue condition;
 
 
         [InParam("shootPoint")]
@@ -120,8 +122,8 @@ namespace BBUnity.Actions
 
                 delayTimer = 0;
 
-                m_ShootingAudio.clip = m_FireClip;
-                m_ShootingAudio.Play();
+                //m_ShootingAudio.clip = m_FireClip;
+                //m_ShootingAudio.Play();
 
                 m_CurrentLaunchForce = 15f;
             }

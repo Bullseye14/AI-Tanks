@@ -13,57 +13,103 @@ namespace BBUnity.Actions
 
     public class PatrolTank1 : GOAction
     {
-        public List<WayPoints> waypoints;
-
-        private int currentWaypoint;
-        private bool isTravelling;
-        private bool nextWaypoint = false;
-        private Vector3 target;
         public UnityEngine.AI.NavMeshAgent navAgent;
+
+        [InParam("Blue Tank")]
+        public GameObject BlueTank;
+        private GameObject[] pointChildren;
+        private GameObject WayPoints;
+        private int destPoint = -1;
 
         public override void OnStart()
         {
             navAgent = gameObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
 
-            if (waypoints != null && waypoints.Count >= 2)
+            WayPoints = GameObject.Find("WayPoints");
+            pointChildren = new GameObject[WayPoints.transform.childCount];
+
+            for (int i = 0; i < WayPoints.transform.childCount; i++)
             {
-                currentWaypoint = 0;
-                SetDestination();
+                pointChildren[i] = WayPoints.transform.GetChild(i).gameObject;
             }
+
+            GameObject tank1 = GameObject.Find("Tank1");
+
+            Patrol();
+
         }
 
         public override TaskStatus OnUpdate()
         {
-            if (isTravelling && navAgent.remainingDistance <= 0.5f)
+            if (BlueTank.activeSelf)
             {
-                isTravelling = false;
+                if (!navAgent.pathPending && navAgent.remainingDistance <= 3f)
+                    navAgent.speed -= 0.5f;
 
-                ChangePatrolPoint();
-                SetDestination();
+                if (!navAgent.pathPending && navAgent.remainingDistance <= 1f)
+                {
+                    Patrol();
+                    navAgent.speed = 4f;
+                }
             }
 
             return TaskStatus.RUNNING;
         }
 
-        private void SetDestination()
+        private void Patrol()
         {
-            if (waypoints != null)
-            {
-                target = waypoints[currentWaypoint].transform.position;
-                navAgent.SetDestination(target);
-                isTravelling = true;
-            }
-        }
 
-        private void ChangePatrolPoint()
-        {
-            if (nextWaypoint)
-                currentWaypoint = (currentWaypoint + 1) % waypoints.Count;
+            if (pointChildren.Length == 0)
+                return;
+
+            if (destPoint == -1)
+            {
+                navAgent.destination = ClosestPatrolPoint();
+            }
             else
             {
-                if (--currentWaypoint < 0)
-                    currentWaypoint = waypoints.Count - 1;
+                navAgent.destination = pointChildren[destPoint].transform.position;
+                destPoint = (destPoint + 1) % pointChildren.Length;
             }
+
+            navAgent.angularSpeed = 200f;
+
+
+            Debug.Log(pointChildren[2].transform.position.y);
+            Debug.Log("Points:" + pointChildren.Length);
+        }
+
+        private Vector3 ClosestPatrolPoint()
+        {
+            float dist = -1;
+            float mindist = 0;
+
+            Vector3 closest = Vector3.zero;
+
+            for (int i = 0; i < pointChildren.Length; i++)
+            {
+
+                //First iteration
+                if (dist == -1)
+                {
+                    mindist = dist = Vector3.Distance(pointChildren[i].transform.position, gameObject.transform.position);
+                    closest = pointChildren[i].transform.position;
+                    destPoint = i;
+                }
+                else
+                {
+                    dist = Vector3.Distance(pointChildren[i].transform.position, gameObject.transform.position);
+
+                    if (dist < mindist)
+                    {
+                        mindist = dist;
+                        closest = pointChildren[i].transform.position;
+                        destPoint = i;
+                    }
+                }
+            }
+
+            return closest;
         }
 
     }

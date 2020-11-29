@@ -12,7 +12,6 @@ public class CanShootBlue : ConditionBase
 {
     public bool blue_shoot = false;
     public bool blocked = false;
-    public Vector3 tanks_distance = Vector3.zero;
     public override bool Check()
     {
 
@@ -24,7 +23,7 @@ public class CanShootBlue : ConditionBase
         Vector3 origin = tank1.transform.position;
         Vector3 destination = tank2.transform.position;
 
-        tanks_distance = AbsoluteValue(destination - origin);
+        //Vector3 tanks_distance = AbsoluteValue(destination - origin);
 
         blocked = NavMesh.Raycast(origin, destination, out hit, NavMesh.AllAreas);
         Debug.DrawLine(tank1.transform.position, tank2.transform.position, blocked ? Color.red : Color.green);
