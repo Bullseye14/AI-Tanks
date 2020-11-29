@@ -10,6 +10,9 @@ using UnityEngine.AI;
 [Help("Checks if the tank can shoot or not")]
 public class CanShootBlue : ConditionBase
 {
+    public bool blue_shoot = false;
+    public bool blocked = false;
+    public Vector3 tanks_distance = Vector3.zero;
     public override bool Check()
     {
 
@@ -21,18 +24,32 @@ public class CanShootBlue : ConditionBase
         Vector3 origin = tank1.transform.position;
         Vector3 destination = tank2.transform.position;
 
-        //Vector3 tanksDistance = AbsoluteValue(destination - origin);
+        tanks_distance = AbsoluteValue(destination - origin);
 
-        bool blocked = NavMesh.Raycast(origin, destination, out hit, NavMesh.AllAreas);
+        blocked = NavMesh.Raycast(origin, destination, out hit, NavMesh.AllAreas);
         Debug.DrawLine(tank1.transform.position, tank2.transform.position, blocked ? Color.red : Color.green);
 
         if (blocked)
         {
             Debug.DrawRay(hit.position, Vector3.up, Color.red);
+            blue_shoot = false;
+            return false;
         }
         else
-            Debug.Log("Can Shoot");
+        {
+            blue_shoot = true;
+            return true;
+        }
+    }
 
-        return blocked;
+    public Vector3 AbsoluteValue(Vector3 vector)
+    {
+        if (vector.x < 0) vector.x = -vector.x;
+
+        if (vector.y < 0) vector.y = -vector.y;
+
+        if (vector.z < 0) vector.z = -vector.z;
+
+        return vector;
     }
 }
