@@ -19,7 +19,10 @@ namespace BBUnity.Actions
         public GameObject BlueTank;
         private GameObject[] pointChildren;
         private GameObject WayPoints;
-        private int destPoint = -1;
+        private bool isTravelling;
+        private bool nextWaypoint = false;
+        private int destPoint;
+        private Vector3 target;
 
         public override void OnStart()
         {
@@ -33,9 +36,13 @@ namespace BBUnity.Actions
                 pointChildren[i] = WayPoints.transform.GetChild(i).gameObject;
             }
 
-            GameObject tank1 = GameObject.Find("Tank1");
+            BlueTank = GameObject.Find("Tank1");
 
-            Patrol();
+            if(pointChildren.Length >= 2)
+            {
+                destPoint = 0;
+                SetDestination();
+            }
 
         }
 
@@ -43,40 +50,37 @@ namespace BBUnity.Actions
         {
             if (BlueTank.activeSelf)
             {
-                if (!navAgent.pathPending && navAgent.remainingDistance <= 3f)
-                    navAgent.speed -= 0.5f;
-
-                if (!navAgent.pathPending && navAgent.remainingDistance <= 1f)
+                if(isTravelling && navAgent.remainingDistance <= 0.5f)
                 {
-                    Patrol();
-                    navAgent.speed = 4f;
+                    isTravelling = false;
+                    ChangePatrolPoint();
+                    SetDestination();
                 }
             }
 
             return TaskStatus.RUNNING;
         }
 
-        private void Patrol()
+        private void SetDestination()
         {
+            target = pointChildren[destPoint].transform.position;
+            navAgent.SetDestination(target);
+            isTravelling = true;
+        }
 
-            if (pointChildren.Length == 0)
-                return;
+        private void ChangePatrolPoint()
+        {
+            if (destPoint == 0)
+                navAgent.SetDestination(ClosestPatrolPoint());
 
-            if (destPoint == -1)
-            {
-                navAgent.destination = ClosestPatrolPoint();
-            }
+            if (nextWaypoint)
+                destPoint = (destPoint + 1) % pointChildren.Length;
+
             else
             {
-                navAgent.destination = pointChildren[destPoint].transform.position;
-                destPoint = (destPoint + 1) % pointChildren.Length;
+                if (--destPoint < 0)
+                    destPoint = pointChildren.Length - 1;
             }
-
-            navAgent.angularSpeed = 200f;
-
-
-            Debug.Log(pointChildren[2].transform.position.y);
-            Debug.Log("Points:" + pointChildren.Length);
         }
 
         private Vector3 ClosestPatrolPoint()
