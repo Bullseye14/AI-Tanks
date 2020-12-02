@@ -23,21 +23,24 @@ public class CanShootBlue : ConditionBase
         Vector3 origin = tank1.transform.position;
         Vector3 destination = tank2.transform.position;
 
-        //Vector3 tanks_distance = AbsoluteValue(destination - origin);
+        Vector3 tanks_distance = AbsoluteValue(destination - origin);
 
         blocked = NavMesh.Raycast(origin, destination, out hit, NavMesh.AllAreas);
         Debug.DrawLine(tank1.transform.position, tank2.transform.position, blocked ? Color.red : Color.green);
 
-        if (blocked)
+
+        // Returns true if it CANNOT shoot, because, if it can shoot, it will not patrol, it will shoot
+        if (blocked || !CloseEnough(tanks_distance, 20))
         {
+            // Cannot shoot, blocked or too far
             Debug.DrawRay(hit.position, Vector3.up, Color.red);
-            blue_shoot = false;
-            return false;
+            blue_shoot = true;
+            return true;
         }
         else
         {
-            blue_shoot = true;
-            return true;
+            blue_shoot = false;
+            return false;
         }
     }
 
@@ -50,5 +53,12 @@ public class CanShootBlue : ConditionBase
         if (vector.z < 0) vector.z = -vector.z;
 
         return vector;
+    }
+
+    private bool CloseEnough(Vector3 distance, int dist)
+    {
+        if (distance.x < dist && distance.z < dist)
+            return true;
+        else return false;
     }
 }
