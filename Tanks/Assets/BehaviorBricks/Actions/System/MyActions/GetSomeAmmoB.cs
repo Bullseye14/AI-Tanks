@@ -8,9 +8,9 @@ using Pada1.BBCore.Framework;
 
 namespace BBUnity.Actions
 {
-    [Action("MyActions/GetSomeAmmo")]
+    [Action("MyActions/GetSomeAmmoB")]
 
-    public class GetSomeAmmo : GOAction
+    public class GetSomeAmmoB : GOAction
     {
         public UnityEngine.AI.NavMeshAgent navAgent;
 
@@ -83,11 +83,8 @@ namespace BBUnity.Actions
             {
                 game = GameObject.Find("GameManager");
 
-                game.GetComponent<MyGameManager>().blueBullets += 2;
+                game.GetComponent<MyGameManager>().blueBullets += 3;
             }
-
         }
-    }
-
-    
+    }    
 }
