@@ -19,8 +19,6 @@ namespace BBUnity.Actions
         private float delayTimer;
         [InParam("delay")]
         public float delay;
-        private Vector3 destination;
-        private Vector3 origin;
 
         //public AudioSource m_ShootingAudio;
         //public AudioClip m_ChargingClip;
@@ -28,9 +26,7 @@ namespace BBUnity.Actions
 
         
         //CanShootBlue condition;
-
-        [InParam("shootPoint")]
-        public Transform shootPoint;
+        private Transform shootPoint;
 
         [InParam("bullet")]
         public GameObject bullet;
@@ -40,64 +36,62 @@ namespace BBUnity.Actions
 
         public override void OnStart()
         {
-           
-            GameObject tank1 = GameObject.Find("Tank1");
-            GameObject tank2 = GameObject.Find("Tank2");
+            if (shootPoint == null)
+            {
+                Transform fireTransf;
 
-            origin = tank1.transform.position;
-            destination = tank2.transform.position;
+                fireTransf = gameObject.transform.Find("TankRenderers");
+                fireTransf = fireTransf.transform.Find("TankTurret");
+                shootPoint = fireTransf.transform.Find("FireTransform");
+            }
+
+            delayTimer = 0f;
 
             base.OnStart();
-        } 
+        }
 
         public override TaskStatus OnUpdate()
         {
-            if (shootPoint == null)
-            {
-                return TaskStatus.FAILED;
-            }
-
             if (!canFire)
             {
                 delayTimer += Time.deltaTime;
+                
                 if (delayTimer >= delay)
                     canFire = true;
             }
 
-            if (/*condition.blue_shoot && */canFire)
+            if (canFire)
             {
                 Fire();
             }
-
-            //GameObject newBullet = GameObject.Instantiate(
-            //                            bullet, shootPoint.position,
-            //                            shootPoint.rotation * bullet.transform.rotation
-            //                        ) as GameObject;
-
-            //if (newBullet.GetComponent<Rigidbody>() == null)
-            //    newBullet.AddComponent<Rigidbody>();
-
-            //newBullet.GetComponent<Rigidbody>().velocity = velocity * shootPoint.forward;
 
             return TaskStatus.COMPLETED;
         }
 
         public void Fire()
         {
-           m_CurrentLaunchForce = 20f;
+            Vector3 shootPos;
+            Quaternion shootRot;
 
-            GameObject newBullet = GameObject.Instantiate
-                                (
-                                   bullet, shootPoint.position,
-                                   shootPoint.rotation * bullet.transform.rotation
-                                ) as GameObject;
+            if (shootPoint == null)
+            {
+                shootPos = Vector3.zero;
+                shootRot = Quaternion.identity;
+            }
+            else
+            { 
+                shootPos = shootPoint.position;
+                shootRot = shootPoint.rotation;
+            }
+
+            m_CurrentLaunchForce = 20f;
+
+            GameObject newBullet = GameObject.Instantiate(bullet, shootPos, shootRot * bullet.transform.rotation) as GameObject;
 
             if (newBullet.GetComponent<Rigidbody>() == null)
                 newBullet.AddComponent<Rigidbody>();
 
             newBullet.GetComponent<Rigidbody>().velocity = m_CurrentLaunchForce * shootPoint.forward;
-
-            canFire = false;
 
             delayTimer = 0;
 

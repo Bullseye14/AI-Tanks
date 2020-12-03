@@ -14,34 +14,37 @@ public class CanShootBlue : ConditionBase
     public bool blocked = false;
     public override bool Check()
     {
-
         GameObject tank1 = GameObject.Find("Tank1");
         GameObject tank2 = GameObject.Find("Tank2");
 
         NavMeshHit hit;
 
-        Vector3 origin = tank1.transform.position;
-        Vector3 destination = tank2.transform.position;
-
-        Vector3 tanks_distance = AbsoluteValue(destination - origin);
-
-        blocked = NavMesh.Raycast(origin, destination, out hit, NavMesh.AllAreas);
-        Debug.DrawLine(tank1.transform.position, tank2.transform.position, blocked ? Color.red : Color.green);
-
-
-        // Returns true if it CANNOT shoot, because, if it can shoot, it will not patrol, it will shoot
-        if (blocked || !CloseEnough(tanks_distance, 20))
+        if (tank2 != null)
         {
-            // Cannot shoot, blocked or too far
-            Debug.DrawRay(hit.position, Vector3.up, Color.red);
-            blue_shoot = true;
-            return true;
+            Vector3 origin = tank1.transform.position;
+            Vector3 destination = tank2.transform.position;
+
+            Vector3 tanks_distance = AbsoluteValue(destination - origin);
+
+            blocked = NavMesh.Raycast(origin, destination, out hit, NavMesh.AllAreas);
+            Debug.DrawLine(tank1.transform.position, tank2.transform.position, blocked ? Color.red : Color.green);
+
+
+            // Returns true if it CANNOT shoot, because, if it can shoot, it will not patrol, it will shoot
+            if (blocked || !CloseEnough(tanks_distance, 20))
+            {
+                // Cannot shoot, blocked or too far
+                Debug.DrawRay(hit.position, Vector3.up, Color.red);
+                blue_shoot = true;
+                return true;
+            }
+            else
+            {
+                blue_shoot = false;
+                return false;
+            }
         }
-        else
-        {
-            blue_shoot = false;
-            return false;
-        }
+        else return true;
     }
 
     public Vector3 AbsoluteValue(Vector3 vector)
