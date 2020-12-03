@@ -23,6 +23,8 @@ public class MyGameManager : MonoBehaviour
     public int blueKills = 0;
     public int redDeaths = 0;
     public int blueDeaths = 0;
+    public int redBullets = 2;
+    public int blueBullets = 2;
     public Text redK_text;
     public Text blueK_text;
     public Text redD_text;

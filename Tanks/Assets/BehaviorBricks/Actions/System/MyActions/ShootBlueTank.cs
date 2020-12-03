@@ -14,8 +14,10 @@ namespace BBUnity.Actions
            "specified velocity.")]
     public class ShootBlueTank : GOAction
     {
-        private float launchForce_long = 20f;
-        private float launchForce_short = 12f;
+        private float launchForce_long = 7f;
+        private float launchForce_short = 7f;
+        public GameObject game;
+        public int bullets;
         private bool canFire = true;
         private float delayTimer;
         [InParam("delay")]
@@ -36,6 +38,10 @@ namespace BBUnity.Actions
 
         public override void OnStart()
         {
+            game = GameObject.Find("GameManager");
+
+            bullets = game.GetComponent<MyGameManager>().blueBullets;
+
             if (shootPoint == null)
             {
                 Transform fireTransf;
@@ -61,7 +67,7 @@ namespace BBUnity.Actions
                     canFire = true;
             }
 
-            if (canFire)
+            if (canFire && bullets > 0)
             {
                 Fire();
                 canFire = false;
@@ -101,6 +107,8 @@ namespace BBUnity.Actions
 
 
             delayTimer = 0;
+            bullets--;
+            game.GetComponent<MyGameManager>().blueBullets--;
 
             //m_ShootingAudio.clip = m_FireClip;
             //m_ShootingAudio.Play();
