@@ -31,7 +31,7 @@ public class CanShootBlue : ConditionBase
 
 
             // Returns true if it CANNOT shoot, because, if it can shoot, it will not patrol, it will shoot
-            if (blocked || !CloseEnough(tanks_distance, 20))
+            if (blocked || !CloseEnough(tanks_distance, 22))
             {
                 // Cannot shoot, blocked or too far
                 Debug.DrawRay(hit.position, Vector3.up, Color.red);

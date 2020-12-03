@@ -14,7 +14,8 @@ namespace BBUnity.Actions
            "specified velocity.")]
     public class ShootBlueTank : GOAction
     {
-        private float m_CurrentLaunchForce;
+        private float launchForce_long = 20f;
+        private float launchForce_short = 12f;
         private bool canFire = true;
         private float delayTimer;
         [InParam("delay")]
@@ -23,7 +24,6 @@ namespace BBUnity.Actions
         //public AudioSource m_ShootingAudio;
         //public AudioClip m_ChargingClip;
         //public AudioClip m_FireClip;
-
         
         //CanShootBlue condition;
         private Transform shootPoint;
@@ -46,6 +46,7 @@ namespace BBUnity.Actions
             }
 
             delayTimer = 0f;
+            canFire = true;
 
             base.OnStart();
         }
@@ -55,7 +56,7 @@ namespace BBUnity.Actions
             if (!canFire)
             {
                 delayTimer += Time.deltaTime;
-                
+
                 if (delayTimer >= delay)
                     canFire = true;
             }
@@ -63,13 +64,16 @@ namespace BBUnity.Actions
             if (canFire)
             {
                 Fire();
+                canFire = false;
             }
 
-            return TaskStatus.COMPLETED;
+            return TaskStatus.RUNNING;
         }
 
         public void Fire()
         {
+            GameObject tank2 = GameObject.Find("Tank2");
+
             Vector3 shootPos;
             Quaternion shootRot;
 
@@ -84,20 +88,35 @@ namespace BBUnity.Actions
                 shootRot = shootPoint.rotation;
             }
 
-            m_CurrentLaunchForce = 20f;
-
             GameObject newBullet = GameObject.Instantiate(bullet, shootPos, shootRot * bullet.transform.rotation) as GameObject;
 
             if (newBullet.GetComponent<Rigidbody>() == null)
                 newBullet.AddComponent<Rigidbody>();
 
-            newBullet.GetComponent<Rigidbody>().velocity = m_CurrentLaunchForce * shootPoint.forward;
+            if (CloseEnough(shootPos, tank2))
+                newBullet.GetComponent<Rigidbody>().velocity = launchForce_short * shootPoint.forward;
+
+            else
+                newBullet.GetComponent<Rigidbody>().velocity = launchForce_long * shootPoint.forward;
+
 
             delayTimer = 0;
 
             //m_ShootingAudio.clip = m_FireClip;
             //m_ShootingAudio.Play();
 
+        }
+        public bool CloseEnough(Vector3 origin, GameObject enemy)
+        {
+            Vector3 enemyPos = enemy.transform.position;
+
+            Vector3 distance;
+            distance.x = Mathf.Abs(enemyPos.x - origin.x);
+            distance.y = 0;
+            distance.z = Mathf.Abs(enemyPos.z - origin.z);
+
+            if (distance.x < 15 && distance.z < 15) return true;
+            else return false;
         }
     } 
 }
