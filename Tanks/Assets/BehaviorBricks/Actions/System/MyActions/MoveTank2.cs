@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 using Pada1.BBCore;
 using Pada1.BBCore.Tasks;
@@ -17,104 +18,82 @@ namespace BBUnity.Actions
 
         [InParam("Red Tank")]
         public GameObject RedTank;
-        private GameObject[] pointChildren;
-        private GameObject WayPoints;
-        private bool isTravelling;
-        private bool nextWaypoint = false;
-        private int destPoint;
-        private Vector3 target;
+
+        private float nextMove;
+        private float moveRate = 0.3f;
+        private Vector3 debugPoint;
+
+        private float delay = 2f;
+        private float delayTimer;
+        private bool waiting = false;
+
+        [InParam("Layer")]
+        public LayerMask layer;
 
         public override void OnStart()
         {
             navAgent = gameObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
 
-            WayPoints = GameObject.Find("WayPointsR");
-            pointChildren = new GameObject[WayPoints.transform.childCount];
-
-            for (int i = 0; i < WayPoints.transform.childCount; i++)
-            {
-                pointChildren[i] = WayPoints.transform.GetChild(i).gameObject;
-            }
-
             RedTank = GameObject.Find("Tank2");
 
-            if (pointChildren.Length >= 2)
-            {
-                destPoint = 0;
-                SetDestination();
-            }
-
+            delayTimer = 0f;
         }
 
         public override TaskStatus OnUpdate()
         {
             if (RedTank.activeSelf)
             {
-                if (isTravelling && navAgent.remainingDistance <= 0.5f)
+                if(waiting)
                 {
-                    isTravelling = false;
-                    ChangePatrolPoint();
-                    SetDestination();
+                    delayTimer += Time.deltaTime;
+
+                    if (delayTimer >= delay)
+                        waiting = false;
                 }
+
+                else
+                {
+                    Wander();
+
+                    waiting = true;
+                }
+                
             }
 
             return TaskStatus.RUNNING;
         }
 
-        private void SetDestination()
+        private void Wander()
         {
-            target = pointChildren[destPoint].transform.position;
-            navAgent.SetDestination(target);
-            isTravelling = true;
-        }
-
-        private void ChangePatrolPoint()
-        {
-            if (destPoint == 0)
-                navAgent.SetDestination(ClosestPatrolPoint());
-
-            if (nextWaypoint)
-                destPoint = (destPoint + 1) % pointChildren.Length;
-
-            else
+            if(Time.time > nextMove)
             {
-                if (--destPoint < 0)
-                    destPoint = pointChildren.Length - 1;
+                nextMove = Time.time + moveRate;
+
+                navAgent.SetDestination(RandomLocation(20f));
             }
         }
 
-        private Vector3 ClosestPatrolPoint()
+
+        private Vector3 RandomLocation(float radius)
         {
-            float dist = -1;
-            float mindist = 0;
+            Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * radius;
 
-            Vector3 closest = Vector3.zero;
+            randomDirection += RedTank.transform.position;
 
-            for (int i = 0; i < pointChildren.Length; i++)
+            NavMeshHit hit;
+
+            Vector3 finalPosition = Vector3.zero;
+
+            if(NavMesh.SamplePosition(randomDirection, out hit, radius, layer))
             {
-
-                //First iteration
-                if (dist == -1)
-                {
-                    mindist = dist = Vector3.Distance(pointChildren[i].transform.position, gameObject.transform.position);
-                    closest = pointChildren[i].transform.position;
-                    destPoint = i;
-                }
-                else
-                {
-                    dist = Vector3.Distance(pointChildren[i].transform.position, gameObject.transform.position);
-
-                    if (dist < mindist)
-                    {
-                        mindist = dist;
-                        closest = pointChildren[i].transform.position;
-                        destPoint = i;
-                    }
-                }
+                finalPosition = hit.position;
             }
 
-            return closest;
-        }
+            debugPoint = finalPosition;
 
+            delayTimer = 0f;
+
+            return finalPosition;
+        }
     }
 }
