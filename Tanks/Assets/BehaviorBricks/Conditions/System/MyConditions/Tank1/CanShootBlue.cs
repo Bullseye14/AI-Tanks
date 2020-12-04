@@ -29,9 +29,8 @@ public class CanShootBlue : ConditionBase
             blocked = NavMesh.Raycast(origin, destination, out hit, NavMesh.AllAreas);
             Debug.DrawLine(tank1.transform.position, tank2.transform.position, blocked ? Color.red : Color.green);
 
-
             // Returns true if it CANNOT shoot, because, if it can shoot, it will not patrol, it will shoot
-            if (blocked || !CloseEnough(tanks_distance, 22))
+            if (blocked || !CloseEnough(tanks_distance, 25))
             {
                 // Cannot shoot, blocked or too far
                 Debug.DrawRay(hit.position, Vector3.up, Color.red);

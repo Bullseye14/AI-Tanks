@@ -11,15 +11,14 @@ using UnityEngine.AI;
 public class OutOfAmmoBlue : ConditionBase
 {
     public GameObject game;
-    public int blue_bullets;
     public override bool Check()
     {
         game = GameObject.Find("GameManager");
-        blue_bullets = game.GetComponent<MyGameManager>().blueBullets;
 
-        if (blue_bullets != 0)
+        if (game.GetComponent<MyGameManager>().blueBullets != 0) 
             return false;
-        else
+
+        else 
             return true;
     }
 }

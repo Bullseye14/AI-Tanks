@@ -28,13 +28,14 @@ namespace BBUnity.Actions
 
         private bool arrived = false;
 
-
         public override void OnStart()
         {
             navAgent = gameObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
 
             RedTank = GameObject.Find("Tank2");
             objective = GameObject.Find("Red Base");
+
+            arrived = false;
 
             base.OnStart();
         }

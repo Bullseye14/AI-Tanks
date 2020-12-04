@@ -14,8 +14,9 @@ namespace BBUnity.Actions
            "specified velocity.")]
     public class ShootBlueTank : GOAction
     {
-        private float launchForce_long = 7f;
-        private float launchForce_short = 7f;
+        private float launchForce_short = 10f;
+        private float launchForce_mid = 15f;
+        private float launchForce_long = 20f;
         public GameObject game;
         public int bullets;
         private bool canFire = true;
@@ -67,7 +68,7 @@ namespace BBUnity.Actions
                     canFire = true;
             }
 
-            if (canFire && bullets > 0)
+            if (canFire && bullets != 0)
             {
                 Fire();
                 canFire = false;
@@ -99,11 +100,7 @@ namespace BBUnity.Actions
             if (newBullet.GetComponent<Rigidbody>() == null)
                 newBullet.AddComponent<Rigidbody>();
 
-            if (CloseEnough(shootPos, tank2))
-                newBullet.GetComponent<Rigidbody>().velocity = launchForce_short * shootPoint.forward;
-
-            else
-                newBullet.GetComponent<Rigidbody>().velocity = launchForce_long * shootPoint.forward;
+            newBullet.GetComponent<Rigidbody>().velocity = ShootForce(CloseEnough(shootPos, tank2)) * shootPoint.forward;
 
 
             delayTimer = 0;
@@ -114,7 +111,7 @@ namespace BBUnity.Actions
             //m_ShootingAudio.Play();
 
         }
-        public bool CloseEnough(Vector3 origin, GameObject enemy)
+        public int CloseEnough(Vector3 origin, GameObject enemy)
         {
             Vector3 enemyPos = enemy.transform.position;
 
@@ -123,8 +120,18 @@ namespace BBUnity.Actions
             distance.y = 0;
             distance.z = Mathf.Abs(enemyPos.z - origin.z);
 
-            if (distance.x < 15 && distance.z < 15) return true;
-            else return false;
+            if (distance.x < 10 && distance.z < 10) return 0;
+
+            else if (distance.x < 17 && distance.z < 17) return 1;
+
+            else return 2;
+        }
+
+        private float ShootForce(int distance)
+        {
+            if (distance == 0) return launchForce_short;
+            else if (distance == 1) return launchForce_mid;
+            else return launchForce_long;
         }
     } 
 }

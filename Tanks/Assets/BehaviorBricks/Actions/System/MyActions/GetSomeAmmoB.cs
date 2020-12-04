@@ -36,6 +36,8 @@ namespace BBUnity.Actions
             BlueTank = GameObject.Find("Tank1");
             objective = GameObject.Find("Blue Base");
 
+            arrived = false;
+
             base.OnStart();
         }
 
