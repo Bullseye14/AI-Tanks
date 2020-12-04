@@ -20,6 +20,12 @@ namespace BBUnity.Actions
         [InParam("blueBase")]
         public GameObject objective;
 
+        [InParam("audioSource")]
+        public AudioSource audioSource;
+
+        [InParam("bulletCharge")]
+        public AudioClip chargeSound;
+
         public GameObject game;
 
         private float delay = 4f;
@@ -86,6 +92,9 @@ namespace BBUnity.Actions
                 game = GameObject.Find("GameManager");
 
                 game.GetComponent<MyGameManager>().blueBullets += 3;
+
+                audioSource.clip = chargeSound;
+                audioSource.Play();
             }
         }
     }    
