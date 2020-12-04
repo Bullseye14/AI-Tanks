@@ -28,7 +28,7 @@ public class DropObjects : MonoBehaviour
 
         else
         {
-            InstantiateBullet(Random.Range(0, 2));
+            InstantiateBullet(Random.Range(0, 100));
         }
     }
 
@@ -38,7 +38,7 @@ public class DropObjects : MonoBehaviour
         dropPosition.x = Random.Range(-29, 27);
         dropPosition.z = Random.Range(-25, 22);
 
-        if (num <= 1)
+        if (num <= 50)
         {
             bullet.transform.position = dropPosition;
             bullet.transform.rotation = Quaternion.identity;
@@ -46,7 +46,7 @@ public class DropObjects : MonoBehaviour
             GameObject bulletInstance = Instantiate(bullet, bullet.transform.position, bullet.transform.rotation) as GameObject;
         }
 
-        else if (num > 1)
+        else if (num > 50)
         {
             health.transform.position = dropPosition;
             health.transform.rotation = Quaternion.identity;
