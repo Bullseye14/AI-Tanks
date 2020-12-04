@@ -16,6 +16,9 @@ public class MyGameManager : MonoBehaviour
     public GameObject blueTank;
     public TankHealth tankHealth1, tankHealth2;
 
+    public GameObject blueBulletsGO;
+    public GameObject redBulletsGO;
+
     public float endDelay = 5f;
     public int redWins = 0;
     public int blueWins = 0;
@@ -46,6 +49,8 @@ public class MyGameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        UpdateBullets(blueBulletsGO, redBulletsGO);
+
         if (!redTank.activeSelf || !blueTank.activeSelf)
         {
             //AppearSpriteRed.SpriteRedInstance.visible1 = false;
@@ -94,6 +99,9 @@ public class MyGameManager : MonoBehaviour
         gameFinished = false;
         endTimer = 0;
 
+        blueBullets = 3;
+        redBullets = 3;
+
         //AppearSpriteBlue.SpriteBlueInstance.visible3 = false;
         //AppearSpriteRed.SpriteRedInstance.visible3 = false;
 
@@ -141,5 +149,71 @@ public class MyGameManager : MonoBehaviour
 
         if (redWins == 3)
             finalPanel.OpenFinalRedPanel();
+    }
+
+    private void UpdateBullets(GameObject blue, GameObject red)
+    {
+        GameObject[] blueBullets_ = new GameObject[blue.transform.childCount];
+        GameObject[] redBullets_ = new GameObject[red.transform.childCount];
+
+        for (int i = 0; i < blue.transform.childCount; i++)
+            blueBullets_[i] = blue.transform.GetChild(i).gameObject;
+
+        for (int i = 0; i < red.transform.childCount; i++)
+            redBullets_[i] = red.transform.GetChild(i).gameObject;
+
+        // Blue Bullets
+        if(blueBullets >=3) // All 3 sprites
+        {
+            blueBullets_[0].SetActive(true);
+            blueBullets_[1].SetActive(true);
+            blueBullets_[2].SetActive(true);
+        }
+        else if(blueBullets ==2) // 0 & 1
+        {
+            blueBullets_[0].SetActive(true);
+            blueBullets_[1].SetActive(true);
+            blueBullets_[2].SetActive(false);
+        }
+        else if(blueBullets == 1) // 0
+        {
+            blueBullets_[0].SetActive(true);
+            blueBullets_[1].SetActive(false);
+            blueBullets_[2].SetActive(false);
+
+        }
+        else if(blueBullets == 0) // none
+        {
+            blueBullets_[0].SetActive(false);
+            blueBullets_[1].SetActive(false);
+            blueBullets_[2].SetActive(false);
+        }
+
+        // Red Bullets
+        if (redBullets >= 3) // All 3 sprites
+        {
+            redBullets_[0].SetActive(true);
+            redBullets_[1].SetActive(true);
+            redBullets_[2].SetActive(true);
+        }
+        else if (redBullets == 2) // 0 & 1
+        {
+            redBullets_[0].SetActive(true);
+            redBullets_[1].SetActive(true);
+            redBullets_[2].SetActive(false);
+        }
+        else if (redBullets == 1) // 0
+        {
+            redBullets_[0].SetActive(true);
+            redBullets_[1].SetActive(false);
+            redBullets_[2].SetActive(false);
+
+        }
+        else if (redBullets == 0) // none
+        {
+            redBullets_[0].SetActive(false);
+            redBullets_[1].SetActive(false);
+            redBullets_[2].SetActive(false);
+        }
     }
 }

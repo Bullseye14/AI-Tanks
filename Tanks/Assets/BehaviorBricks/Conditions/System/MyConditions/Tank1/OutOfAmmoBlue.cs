@@ -17,9 +17,9 @@ public class OutOfAmmoBlue : ConditionBase
         game = GameObject.Find("GameManager");
         blue_bullets = game.GetComponent<MyGameManager>().blueBullets;
 
-        if (blue_bullets == 0)
-            return true;
-        else
+        if (blue_bullets != 0)
             return false;
+        else
+            return true;
     }
 }

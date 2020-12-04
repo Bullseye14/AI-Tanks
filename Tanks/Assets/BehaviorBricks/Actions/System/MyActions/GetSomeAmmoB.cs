@@ -63,7 +63,7 @@ namespace BBUnity.Actions
             distance.x = Mathf.Abs(objective.transform.position.x - BlueTank.transform.position.x);
             distance.z = Mathf.Abs(objective.transform.position.z - BlueTank.transform.position.z);
 
-            if (distance.x > 1 && distance.z > 1)
+            if (distance.x > 3 && distance.z > 3)
                 navAgent.SetDestination(objective.transform.position);
 
             else
