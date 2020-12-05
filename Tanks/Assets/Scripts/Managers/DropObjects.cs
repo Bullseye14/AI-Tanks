@@ -8,6 +8,8 @@ public class DropObjects : MonoBehaviour
     public GameObject bullet;
     public GameObject health;
 
+    public TankHealth TankHealth;
+
     private Vector3 dropPosition;
     private float delay = 7f;
     private float delayTimer;
@@ -30,6 +32,16 @@ public class DropObjects : MonoBehaviour
         else
         {
             InstantiateBullet(Random.Range(0, 100));
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Tank"))
+        {
+            // apply effect (men haig danar a dinar, esta a mitjes)
+
+            Destroy(gameObject);
         }
     }
 
