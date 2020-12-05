@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class DropObjects : MonoBehaviour
 {
@@ -34,9 +35,13 @@ public class DropObjects : MonoBehaviour
 
     private void InstantiateBullet(float num)
     {
-        dropPosition.y = 1f;
+        dropPosition.y = 0.5f;
         dropPosition.x = Random.Range(-29, 27);
         dropPosition.z = Random.Range(-25, 22);
+
+        //dropPosition.y = 0.5f;
+        //dropPosition.x = RandomNavmeshLocation(40).x;
+        //dropPosition.z = RandomNavmeshLocation(40).z;
 
         if (num <= 50)
         {
@@ -56,5 +61,18 @@ public class DropObjects : MonoBehaviour
 
         delayTimer = 0f;
         appear = false;
+    }
+
+    public Vector3 RandomNavmeshLocation(float radius)
+    {
+        Vector3 randomDirection = Random.insideUnitSphere * radius;
+        randomDirection += transform.position;
+        NavMeshHit hit;
+        Vector3 finalPosition = Vector3.zero;
+        if (NavMesh.SamplePosition(randomDirection, out hit, radius, 1))
+        {
+            finalPosition = hit.position;
+        }
+        return finalPosition;
     }
 }
