@@ -24,6 +24,11 @@ public class TankHealth : MonoBehaviour
         m_ExplosionParticles.gameObject.SetActive(false);
     }
 
+    private void Update()
+    {
+        SetHealthUI();
+    }
+
 
     private void OnEnable()
     {

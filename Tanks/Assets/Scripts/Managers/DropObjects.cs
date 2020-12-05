@@ -35,16 +35,6 @@ public class DropObjects : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.CompareTag("Tank"))
-        {
-            // apply effect (men haig danar a dinar, esta a mitjes)
-
-            Destroy(gameObject);
-        }
-    }
-
     private void InstantiateBullet(float num)
     {
         dropPosition.y = 0.5f;
