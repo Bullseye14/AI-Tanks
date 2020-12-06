@@ -8,33 +8,34 @@ using Pada1.BBCore.Framework;
 
 namespace BBUnity.Actions
 {
-    [Action("MyActions/BluePickHealth")]
+    [Action("MyActions/RedPickBullet")]
 
-    public class BluePickHealth : GOAction
+    public class RedPickBullet : GOAction
     {
         public UnityEngine.AI.NavMeshAgent navAgent;
 
-        [InParam("Blue Tank")]
-        public GameObject BlueTank;
-
-        [InParam("Tank Health")]
-        public TankHealth tankHealth;
+        [InParam("Red Tank")]
+        public GameObject RedTank;
 
         public GameObject objective;
 
+        [InParam("audioSource")]
+        public AudioSource audioSource;
+
+        [InParam("bulletCharge")]
+        public AudioClip chargeSound;
+
+        public GameObject game;
+
         private bool arrived = false;
+
 
         public override void OnStart()
         {
             navAgent = gameObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
 
-            BlueTank = GameObject.Find("Tank1");
-            objective = GameObject.Find("Heart(Clone)");
-
-            if(tankHealth == null)
-            {
-                tankHealth = GameObject.Find("Tank1").GetComponent<TankHealth>();
-            }
+            RedTank = GameObject.Find("Tank2");
+            objective = GameObject.Find("Bullet(Clone)");
 
             arrived = false;
 
@@ -43,14 +44,14 @@ namespace BBUnity.Actions
 
         public override TaskStatus OnUpdate()
         {
-            if (BlueTank.activeSelf)
+            if (RedTank.activeSelf)
             {
-                if (!arrived && objective != null)
+                if (!arrived)
                 {
                     GoToBase();
                 }
 
-                else if (arrived)
+                else
                 {
                     HeyHeyMate_GETSEMEMO();
                 }
@@ -62,8 +63,8 @@ namespace BBUnity.Actions
         {
             Vector3 distance = Vector3.zero;
 
-            distance.x = Mathf.Abs(objective.transform.position.x - BlueTank.transform.position.x);
-            distance.z = Mathf.Abs(objective.transform.position.z - BlueTank.transform.position.z);
+            distance.x = Mathf.Abs(objective.transform.position.x - RedTank.transform.position.x);
+            distance.z = Mathf.Abs(objective.transform.position.z - RedTank.transform.position.z);
 
             if (distance.x > 1 && distance.z > 1)
                 navAgent.SetDestination(objective.transform.position);
@@ -74,16 +75,14 @@ namespace BBUnity.Actions
 
         private void HeyHeyMate_GETSEMEMO()
         {
-            if (objective != null)
-            {
-                GameObject.Find("Tank1").GetComponent<TankHealth>().m_CurrentHealth += 30f;
+            game = GameObject.Find("GameManager");
 
-                objective = null;
-                GameObject.Destroy(objective);
+            game.GetComponent<MyGameManager>().redBullets += 1;
 
-                arrived = false;
+            audioSource.clip = chargeSound;
+            audioSource.Play();
 
-            }
+            GameObject.Destroy(objective);
         }
     }
 }

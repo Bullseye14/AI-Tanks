@@ -8,14 +8,14 @@ using Pada1.BBCore.Framework;
 
 namespace BBUnity.Actions
 {
-    [Action("MyActions/BluePickHealth")]
+    [Action("MyActions/RedPickHealth")]
 
-    public class BluePickHealth : GOAction
+    public class RedPickHealth : GOAction
     {
         public UnityEngine.AI.NavMeshAgent navAgent;
 
-        [InParam("Blue Tank")]
-        public GameObject BlueTank;
+        [InParam("Red Tank")]
+        public GameObject RedTank;
 
         [InParam("Tank Health")]
         public TankHealth tankHealth;
@@ -28,12 +28,12 @@ namespace BBUnity.Actions
         {
             navAgent = gameObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
 
-            BlueTank = GameObject.Find("Tank1");
+            RedTank = GameObject.Find("Tank2");
             objective = GameObject.Find("Heart(Clone)");
 
-            if(tankHealth == null)
+            if (tankHealth == null)
             {
-                tankHealth = GameObject.Find("Tank1").GetComponent<TankHealth>();
+                tankHealth = GameObject.Find("Tank2").GetComponent<TankHealth>();
             }
 
             arrived = false;
@@ -43,7 +43,7 @@ namespace BBUnity.Actions
 
         public override TaskStatus OnUpdate()
         {
-            if (BlueTank.activeSelf)
+            if (RedTank.activeSelf)
             {
                 if (!arrived && objective != null)
                 {
@@ -62,8 +62,8 @@ namespace BBUnity.Actions
         {
             Vector3 distance = Vector3.zero;
 
-            distance.x = Mathf.Abs(objective.transform.position.x - BlueTank.transform.position.x);
-            distance.z = Mathf.Abs(objective.transform.position.z - BlueTank.transform.position.z);
+            distance.x = Mathf.Abs(objective.transform.position.x - RedTank.transform.position.x);
+            distance.z = Mathf.Abs(objective.transform.position.z - RedTank.transform.position.z);
 
             if (distance.x > 1 && distance.z > 1)
                 navAgent.SetDestination(objective.transform.position);
@@ -76,7 +76,7 @@ namespace BBUnity.Actions
         {
             if (objective != null)
             {
-                GameObject.Find("Tank1").GetComponent<TankHealth>().m_CurrentHealth += 30f;
+                GameObject.Find("Tank2").GetComponent<TankHealth>().m_CurrentHealth += 30f;
 
                 objective = null;
                 GameObject.Destroy(objective);
