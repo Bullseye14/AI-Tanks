@@ -23,11 +23,10 @@ public class CanPickDropR : ConditionBase
         {
             bullet = GameObject.Find("Bullet(Clone)");
 
+            self = GameObject.Find("Tank2"); enemy = GameObject.Find("Tank1");
+
             if (bullet != null && enemy != null)
             {
-                self = GameObject.Find("Tank2"); enemy = GameObject.Find("Tank1");
-
-                //return true;
                 return GoForAmmo(self.transform.position, enemy.transform.position, bullet.transform.position);
             }
             else return false;
@@ -41,7 +40,6 @@ public class CanPickDropR : ConditionBase
     {
         Vector3 s_e = Vector3.zero;
         Vector3 s_b = Vector3.zero;
-        Vector3 e_b = Vector3.zero;
 
         // Distance between Tanks
         s_e.x = Mathf.Abs(e.x - s.x);
@@ -51,18 +49,9 @@ public class CanPickDropR : ConditionBase
         s_b.x = Mathf.Abs(b.x - s.x);
         s_b.z = Mathf.Abs(b.z - s.z);
 
-        // Distance between Enemy and Bullet
-        e_b.x = Mathf.Abs(b.x - e.x);
-        e_b.z = Mathf.Abs(b.z - e.z);
-
-
         if (s_e.x > s_b.x && s_e.z > s_b.z) // Tank is closest to Bullet than to Enemy
         {
-            if (s_b.x < e_b.x && s_b.z < e_b.z) // Tank is closest to Bullet than the enemy
-            {
-                return true;
-            }
-            else return false; // Enemy is closest to Bullet than Tank
+            return true;
         }
         else return false; // Enemy is closest to Tank than to Bullet
     }

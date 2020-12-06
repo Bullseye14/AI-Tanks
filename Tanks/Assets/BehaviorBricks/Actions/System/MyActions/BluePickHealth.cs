@@ -22,6 +22,12 @@ namespace BBUnity.Actions
 
         public GameObject objective;
 
+        [InParam("audioSource")]
+        public AudioSource audioSource;
+
+        [InParam("healthSound")]
+        public AudioClip healthSound;
+
         private bool arrived = false;
 
         public override void OnStart()
@@ -78,8 +84,10 @@ namespace BBUnity.Actions
             {
                 GameObject.Find("Tank1").GetComponent<TankHealth>().m_CurrentHealth += 30f;
 
-                objective = null;
                 GameObject.Destroy(objective);
+
+                audioSource.clip = healthSound;
+                audioSource.Play();
 
                 arrived = false;
 
