@@ -46,20 +46,20 @@ namespace BBUnity.Actions
         {
             if (BlueTank.activeSelf)
             {
-                if (!arrived)
+                if (!arrived && objective != null)
                 {
-                    GoToBase();
+                    GoToDrop();
                 }
 
-                else
+                else if (arrived)
                 {
-                    HeyHeyMate_GETSEMEMO();
+                    GetDrop();
                 }
             }
 
             return TaskStatus.RUNNING;
         }
-        private void GoToBase()
+        private void GoToDrop()
         {
             Vector3 distance = Vector3.zero;
 
@@ -73,7 +73,7 @@ namespace BBUnity.Actions
                 arrived = true;
         }
 
-        private void HeyHeyMate_GETSEMEMO()
+        private void GetDrop()
         {
             game = GameObject.Find("GameManager");
 

@@ -50,12 +50,12 @@ namespace BBUnity.Actions
         {
             if (RedTank.activeSelf)
             {
-                if (!arrived)
+                if (!arrived && objective != null)
                 {
                     GoToBase();
                 }
 
-                else
+                else if (arrived)
                 {
                     HeyHeyMate_GETSEMEMO();
                 }

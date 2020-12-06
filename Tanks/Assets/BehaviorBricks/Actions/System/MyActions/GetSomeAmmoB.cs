@@ -51,12 +51,12 @@ namespace BBUnity.Actions
         {
             if (BlueTank.activeSelf)
             {
-                if (!arrived)
+                if (!arrived && objective != null)
                 {
                     GoToBase();
                 }
 
-                else
+                else if (arrived)
                 {
                     HeyHeyMate_GETSEMEMO();
                 }
